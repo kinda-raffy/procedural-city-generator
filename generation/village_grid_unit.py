@@ -1,14 +1,13 @@
 from __future__ import annotations
 from generation import connection
-import mcpi.minecraft
-import mcpi.vec3
+from mcpi.vec3 import Vec3
 import enum
 import dataclasses
 import math
 import json
 
 
-terrain_type_codes = json.load('block_terrain_types.json')
+terrain_type_codes = json.load('config/block_terrain_types.json')
 
 
 class TerrainType(enum.Enum):
@@ -21,18 +20,18 @@ class TerrainType(enum.Enum):
 
 @dataclasses.dataclass
 class VillageGridUnit:
-    vector_position: mcpi.vec3.Vec3
+    vector_position: Vec3
     coordinate_label: tuple[int, int]
     _terrain_type: TerrainType = None
     _path_predecessor: VillageGridUnit = None
     _distance_to_centre: float = math.inf
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         # Use vector field to derive terrain.
         self._terrain_type = VillageGridUnit.derive_vector_terrain(self.vector_position)
 
     @staticmethod
-    def derive_vector_terrain(block_position: mcpi.vec3.Vec3) -> TerrainType:
+    def derive_vector_terrain(block_position: Vec3) -> TerrainType:
         block_id = connection.getBlock(
             block_position.x, block_position.y, block_position.z)
         # Match the received block id against those grouped by terrain type.
