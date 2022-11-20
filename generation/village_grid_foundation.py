@@ -55,10 +55,13 @@ class VillageGridFoundation:
             # Add the new tile with an empty adjacency list.
             self._adjacency_list[new_grid_unit] = list()
 
-    def build_village_grid(auto_connect: bool = True) -> None:
+    def find_grid_unit(self, *, coordinate_label: tuple[int, int] = None, vector_position: Vec3 = None) -> typing.Optional[VillageGridUnit]:
+        pass
+
+    def build_village_grid(self, auto_connect: bool = True) -> None:
         raise NotImplementedError()
 
-    def connect_village_grid() -> None:
+    def connect_village_grid(self) -> None:
         raise NotImplementedError()
 
 
