@@ -1,4 +1,5 @@
 from __future__ import annotations
+from generation import connection
 import mcpi.minecraft
 import mcpi.vec3
 import enum
@@ -7,8 +8,6 @@ import math
 import json
 
 
-# TODO: A better way of handling these server connection instances across files?
-minecraft_instance = mcpi.minecraft.Minecraft.create()
 terrain_type_codes = json.load('block_terrain_types.json')
 
 
@@ -34,7 +33,7 @@ class VillageGridUnit:
 
     @staticmethod
     def derive_vector_terrain(block_position: mcpi.vec3.Vec3) -> TerrainType:
-        block_id = minecraft_instance.getBlock(
+        block_id = connection.getBlock(
             block_position.x, block_position.y, block_position.z)
         # Match the received block id against those grouped by terrain type.
         for terrain_type, terrain_type_value in TerrainType:
