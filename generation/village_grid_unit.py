@@ -42,6 +42,27 @@ class VillageGridUnit:
         # Return ground if no matches identified for another type.
         return TerrainType.GROUND
 
+    @staticmethod
+    def create_unit_north(curr_unit: VillageGridUnit, *, vector_offset: int) -> VillageGridUnit:
+        label_x, label_y = curr_unit.coordinate_label
+        coord_x, coord_z = curr_unit.vector_position.x, curr_unit.vector_position.z
+        north_x = coord_x - vector_offset
+        return VillageGridUnit(
+            Vec3(north_x, connection.getHeight(north_x, coord_z), coord_z), (label_x - 1, label_y))
+
+    @staticmethod
+    def create_unit_south(curr_unit: VillageGridUnit, *, vector_offset: int) -> VillageGridUnit:
+        # TODO: Finish these basic unit creation functions.
+        raise NotImplementedError()
+
+    @staticmethod
+    def create_unit_east(curr_unit: VillageGridUnit, *, vector_offset: int) -> VillageGridUnit:
+        raise NotImplementedError()
+
+    @staticmethod
+    def create_unit_west(curr_unit: VillageGridUnit, *, vector_offset: int) -> VillageGridUnit:
+        raise NotImplementedError()
+
 
 def _village_grid_unit_test() -> None:
     raise NotImplementedError()
