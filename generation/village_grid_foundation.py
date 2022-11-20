@@ -50,6 +50,11 @@ class VillageGridFoundation:
             raise ValueError('Side length is positive, odd and set before grid is generated.')
         self.__unit_side_length = unit_side_length
 
+    def add_grid_unit(self, new_grid_unit: VillageGridUnit) -> None:
+        if isinstance(new_grid_unit, VillageGridUnit) and new_grid_unit not in self._adjacency_list:
+            # Add the new tile with an empty adjacency list.
+            self._adjacency_list[new_grid_unit] = list()
+
     def build_village_grid(auto_connect: bool = True) -> None:
         raise NotImplementedError()
 
