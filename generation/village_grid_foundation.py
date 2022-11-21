@@ -1,4 +1,4 @@
-from generation import connection
+from generation import connection as server_connection
 from collections import deque
 from village_grid_unit import VillageGridUnit, TerrainType
 from mcpi.vec3 import Vec3
@@ -17,7 +17,7 @@ class VillageGridFoundation:
         prohibited_terrain: set[TerrainType] = None,
         water_road_penalty: int = 7,
     ) -> None:
-        self.starting_position: Vec3 = connection.player.getTilePos() # Use current player position as the central grid unit.
+        self.starting_position: Vec3 = server_connection.player.getTilePos() # Use current player position as the central grid unit.
         self.unit_upper_bound: int = unit_upper_bound
         self.unit_side_length: int = unit_side_length
         self.height_variance_tolerance: int = abs(height_variance_tolerance)
@@ -119,6 +119,7 @@ class VillageGridFoundation:
             VillageGridUnit.create_unit_north, VillageGridUnit.create_unit_east,
             VillageGridUnit.create_unit_south, VillageGridUnit.create_unit_west,
         ]
+        # Visit each unit using breadth-first search, connect adjacent units if they exist and create new units where they don't.
         while frontier and len(include_units) < self.unit_upper_bound:
             current_unit: VillageGridUnit = frontier.popleft() # Next unit is located at the front of the deque.
             if current_unit not in visited_units:
@@ -127,11 +128,10 @@ class VillageGridFoundation:
                 label_x, label_y = current_unit.coordinate_label
                 adjacent_exists: list[bool] = \
                     self.__connect_existing_grid_units(current_unit, label_x, label_y)
-                for direction_index in range(4): # All lists involved will always be of this length.
-                    if not adjacent_exists[direction_index]:
+                for unit_already_exists, unit_creation_function in zip(adjacent_exists, adjacent_unit_functions):
+                    if not unit_already_exists:
                         # If no unit exists yet, create one and add it to the grid; edge created if possible.
-                        adjacent_unit = adjacent_unit_functions[direction_index](
-                            current_unit, vector_offset=self.unit_separation)
+                        adjacent_unit = unit_creation_function(current_unit, vector_offset=self.unit_separation)
                         self.__handle_created_grid_unit(current_unit, adjacent_unit, frontier)
         if auto_connect:
             # Ensure all units added to the grid are connected with edges where possible.
@@ -173,6 +173,7 @@ class VillageGridFoundation:
             frontier.append(created_unit)
 
     def connect_village_grid(self) -> None:
+        # TODO: Figure out if this function is required.
         raise NotImplementedError()
 
 
