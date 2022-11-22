@@ -17,7 +17,7 @@ class VillageGridFoundation:
         prohibited_terrain: set[TerrainType] = None,
         water_road_penalty: int = 7,
     ) -> None:
-        self.starting_position: Vec3 = server_connection.player.getTilePos() # Use current player position as the central grid unit.
+        self.starting_position: Vec3 = server_connection.player.getTilePos()  # Use current player position as the central grid unit.
         self.unit_upper_bound: int = unit_upper_bound
         self.unit_side_length: int = unit_side_length
         self.height_variance_tolerance: int = abs(height_variance_tolerance)
@@ -45,7 +45,7 @@ class VillageGridFoundation:
 
     @property
     def unit_separation(self) -> int:
-        # The total blocks traversed when travelling between the centres of adjacent units.
+        # Total blocks traversed when travelling between centres of adjacent units.
         return self.unit_side_length + 1
 
     @unit_upper_bound.setter
@@ -56,28 +56,32 @@ class VillageGridFoundation:
 
     @unit_side_length.setter
     def unit_side_length(self, unit_side_length: int) -> None:
-        # Ensure side length, and thus separation, are not altered after grid is generated.
-        if self.adjacency_list or self._edge_weights or unit_side_length % 2 == 0 or unit_side_length <= 0:
-            raise ValueError('Side length is positive, odd and set before grid is generated.')
+        # Ensure side length and separation are not altered after grid is generated.
+        if self.adjacency_list or self._edge_weights \
+            or unit_side_length % 2 == 0 or unit_side_length <= 0:
+            raise ValueError(
+                'Side length is positive, odd and set before grid is generated.')
         self.__unit_side_length = unit_side_length
 
     def add_grid_unit(self, new_grid_unit: VillageGridUnit) -> None:
-        if isinstance(new_grid_unit, VillageGridUnit) and new_grid_unit not in self._adjacency_list:
+        if isinstance(new_grid_unit, VillageGridUnit) \
+            and new_grid_unit not in self._adjacency_list:
             # Add the new tile with an empty adjacency list.
             self._adjacency_list[new_grid_unit] = list()
 
     def find_grid_unit(
-        self, *, # The label or vector used in search needs to be passed by keyword to avoid confusion.
+        self, *,
         coordinate_label: tuple[int, int] = None,
         vector_position: Vec3 = None
     ) -> typing.Optional[VillageGridUnit]:
         if coordinate_label is None and vector_position is None:
             return None
         checking_coord_label: bool = coordinate_label is not None
-        # Return the grid unit object that corresponds with the passed search value; label used by default.
+        # Return the grid unit object that corresponds with the search arg; label used by default.
         search_value = coordinate_label if checking_coord_label else vector_position
         for grid_unit in self:
-            if search_value == (grid_unit.coordinate_label if checking_coord_label else grid_unit.vector_position):
+            if search_value == (grid_unit.coordinate_label if checking_coord_label
+                else grid_unit.vector_position):
                 return grid_unit
 
     def add_grid_edge(self, unit_one: VillageGridUnit, unit_two: VillageGridUnit) -> bool:
@@ -89,19 +93,25 @@ class VillageGridFoundation:
         edge_weight = self.__derive_edge_weight(unit_one, unit_two)
         if edge_weight is None:
             return False
-        # Add edges in both directions including weight; indexing is okay since there's always two units.
-        for edge_pair in (unit_pair_one, unit_pair_two):
-            self._adjacency_list[edge_pair[0]].append(edge_pair[1])
-            self._edge_weights[edge_pair] = edge_weight
+        # Add edges in both directions including weight
+        for (unit_x, unit_y) in [unit_pair_one, unit_pair_two]:
+            self._adjacency_list[unit_x].append(unit_y)
+            self._edge_weights[(unit_x, unit_y)] = edge_weight
         return True
 
-    def __derive_edge_weight(self, unit_one: VillageGridUnit, unit_two: VillageGridUnit) -> typing.Optional[int]:
-        # Return null if the edge is not allowed due to invalid terrain or excessive height variation.
+    def __derive_edge_weight(
+        self,
+        unit_one: VillageGridUnit,
+        unit_two: VillageGridUnit,
+    ) -> typing.Optional[int]:
+        # Return null if the edge is not allowed due to terrain or height variation.
         terrain_one: TerrainType = unit_one._terrain_type
         terrain_two: TerrainType = unit_two._terrain_type
-        if terrain_one in self.__prohibited_terrain or terrain_two in self.__prohibited_terrain:
+        if terrain_one in self.__prohibited_terrain \
+            or terrain_two in self.__prohibited_terrain:
             return None
-        elevation_difference: int = abs(unit_one.vector_position.y - unit_two.vector_position.y)
+        elevation_difference: int = abs(
+            unit_one.vector_position.y - unit_two.vector_position.y)
         if elevation_difference > self.height_variance_tolerance:
             return None
         # Add one to the difference so edge weights are always positive.
@@ -112,29 +122,34 @@ class VillageGridFoundation:
     def build_village_grid(self, *, auto_connect: bool = True) -> set[VillageGridUnit]:
         visited_units: set[VillageGridUnit] = set()
         include_units: set[VillageGridUnit] = set()
-        # The frontier tracks all units to be visited, beginning at the starting position. Coordinates used for labels.
+        # The frontier tracks all units to be visited from starting position.
         frontier: deque[VillageGridUnit] = deque()
         frontier.append(VillageGridUnit(self.starting_position, (0, 0)))
-        adjacent_unit_functions: list[typing.Callable] = [ # Functions used repeatedly to create adjacent units.
+        # Functions used repeatedly to create adjacent units.
+        adjacent_unit_functions: list[typing.Callable] = [
             VillageGridUnit.create_unit_north, VillageGridUnit.create_unit_east,
             VillageGridUnit.create_unit_south, VillageGridUnit.create_unit_west,
         ]
-        # Visit each unit using breadth-first search, connect adjacent units if they exist and create new units where they don't.
+        # Visit each unit using breadth-first search. 
+        # Connect adjacent units if they exist and create new units where they don't.
         while frontier and len(include_units) < self.unit_upper_bound:
-            current_unit: VillageGridUnit = frontier.popleft() # Next unit is located at the front of the deque.
+            current_unit: VillageGridUnit = frontier.popleft()
             if current_unit not in visited_units:
                 visited_units.add(current_unit)
                 include_units.add(current_unit)
                 label_x, label_y = current_unit.coordinate_label
                 adjacent_exists: list[bool] = \
                     self.__connect_existing_grid_units(current_unit, label_x, label_y)
-                for unit_already_exists, unit_creation_function in zip(adjacent_exists, adjacent_unit_functions):
+                for unit_already_exists, unit_creation_function in zip(
+                    adjacent_exists, adjacent_unit_functions):
+                    # If no unit exists yet, create one and connect it to the grid.
                     if not unit_already_exists:
-                        # If no unit exists yet, create one and add it to the grid; edge created if possible.
-                        adjacent_unit = unit_creation_function(current_unit, vector_offset=self.unit_separation)
-                        self.__handle_created_grid_unit(current_unit, adjacent_unit, frontier)
+                        adjacent_unit = unit_creation_function(
+                            current_unit, vector_offset=self.unit_separation)
+                        self.__handle_created_grid_unit(
+                            current_unit, adjacent_unit, frontier)
+        # Ensure all units in the grid are connected where possible.
         if auto_connect:
-            # Ensure all units added to the grid are connected with edges where possible.
             for added_unit in self:
                 label_x, label_y = added_unit.coordinate_label
                 self.__connect_existing_grid_units()
@@ -146,20 +161,14 @@ class VillageGridFoundation:
         label_x: int,
         label_y: int,
     ) -> list[bool]:
-        adjacent_unit_exists: list[bool] = [False] * 4
+        adjacent_unit_exists: list[bool] = [False] * 4  # Four cardinal directions.
+        label_direction_offsets: list[tuple[int]] = [(-1, 0), (0, 1), (1, 0), (0, -1)]
         # Check each direction for existing unit and connect if found; return indication of where units exist.
-        if north_unit := self.find_grid_unit(coordinate_label=(label_x - 1, label_y)) is not None:
-            self.add_grid_edge(current_unit, north_unit)
-            adjacent_unit_exists[0] = True
-        if east_unit := self.find_grid_unit(coordinate_label=(label_x, label_y + 1)) is not None:
-            self.add_grid_edge(current_unit, east_unit)
-            adjacent_unit_exists[1] = True
-        if south_unit := self.find_grid_unit(coordinate_label=(label_x + 1, label_y)) is not None:
-            self.add_grid_edge(current_unit, south_unit)
-            adjacent_unit_exists[2] = True
-        if west_unit := self.find_grid_unit(coordinate_label=(label_x, label_y - 1)) is not None:
-            self.add_grid_edge(current_unit, west_unit)
-            adjacent_unit_exists[3] = True
+        for index, (x_offset, y_offset) in enumerate(label_direction_offsets):
+            new_x, new_y = label_x + x_offset, label_y + y_offset
+            if found_unit := self.find_grid_unit(coordinate_label=(new_x, new_y)) is not None:
+                self.add_grid_edge(current_unit, found_unit)
+                adjacent_unit_exists[index] = True
         return adjacent_unit_exists
 
     def __handle_created_grid_unit(

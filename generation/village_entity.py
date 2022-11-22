@@ -10,8 +10,9 @@ class VillageEntity:
         grid_foundation: VillageGridFoundation = None,
         house_upper_bound: int = 200
     ) -> None:
-        self.__grid_foundation: VillageGridFoundation = grid_foundation if grid_foundation is not None \
-            else VillageGridFoundation() # Create grid with default values if no object provided.
+        # Create grid with default values if no object provided.
+        self.__grid_foundation: VillageGridFoundation = grid_foundation if \
+            grid_foundation is not None else VillageGridFoundation()
         self.__curr_house_units: list[VillageGridUnit] = list()
         self.house_upper_bound: int = abs(house_upper_bound)
 
