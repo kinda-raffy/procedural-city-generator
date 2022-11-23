@@ -49,7 +49,7 @@ from mcpi import block
 from mcpi.vec3 import Vec3
 import random
 from time import sleep
-from house_config import blocks, apartment_biome, sand_biome, grass_biome, water_biome, furniture
+from generation.building.config.design import blocks, apartment_biome, sand_biome, grass_biome, water_biome, furniture
 
 mc = Minecraft.create()
 sleep_time = 0
