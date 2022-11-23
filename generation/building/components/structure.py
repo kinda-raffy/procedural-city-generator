@@ -1,0 +1,1 @@
+# Contains walls and pillars.
