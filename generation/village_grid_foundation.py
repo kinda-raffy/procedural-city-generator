@@ -194,7 +194,7 @@ class VillageGridFoundation:
     ) -> list[bool]:
         adjacent_unit_exists: list[bool] = [False] * 4  # Four cardinal directions.
         label_direction_offsets: list[tuple[int]] = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-        # Check each direction for existing unit and connect if found; return indication of where units exist.
+        # Check each direction for existing unit and connect if found.
         for index, (x_offset, y_offset) in enumerate(label_direction_offsets):
             new_x, new_y = label_x + x_offset, label_y + y_offset
             if (
@@ -203,7 +203,7 @@ class VillageGridFoundation:
             ):
                 self.add_grid_edge(current_unit, found_unit)
                 adjacent_unit_exists[index] = True
-        return adjacent_unit_exists
+        return adjacent_unit_exists  # Return indication of where units exist.
 
     def __handle_created_grid_unit(
         self,
