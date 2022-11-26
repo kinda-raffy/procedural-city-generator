@@ -4,15 +4,16 @@ import typing
 
 
 class VillageEntity:
-
     def __init__(
-        self, *, 
+        self,
+        *,
         grid_foundation: VillageGridFoundation = None,
         house_upper_bound: int = 200
     ) -> None:
         # Create grid with default values if no object provided.
-        self.__grid_foundation: VillageGridFoundation = grid_foundation if \
-            grid_foundation is not None else VillageGridFoundation()
+        self.__grid_foundation: VillageGridFoundation = (
+            grid_foundation if grid_foundation is not None else VillageGridFoundation()
+        )
         self.__curr_house_units: list[VillageGridUnit] = list()
         self.house_upper_bound: int = abs(house_upper_bound)
 
@@ -34,5 +35,6 @@ def _village_entity_test() -> None:
     raise NotImplementedError()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _village_entity_test()
+# std::vector<std::string>
