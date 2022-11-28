@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Biome(Enum):
     GROUND = 1
     SAND = 2
