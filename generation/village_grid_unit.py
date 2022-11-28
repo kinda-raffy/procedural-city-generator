@@ -24,9 +24,8 @@ class VillageGridUnit:
     vector_position: Vec3
     coordinate_label: tuple[int, int]
     _terrain_type: TerrainType = None
-    _path_predecessor: VillageGridUnit = (
-        None  # Predecessor and distance to centre used for pathfinding.
-    )
+    # Predecessor and distance to centre used for pathfinding.
+    _path_predecessor: VillageGridUnit = None
     _distance_to_centre: float = math.inf
 
     def __post_init__(self) -> None:

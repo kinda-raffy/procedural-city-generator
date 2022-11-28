@@ -37,4 +37,3 @@ def _village_entity_test() -> None:
 
 if __name__ == "__main__":
     _village_entity_test()
-
