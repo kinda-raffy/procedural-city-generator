@@ -8,7 +8,7 @@ import typing
 # import functools
 
 
-class VillageGridFoundation:
+class VillageGridFoundation:  # TODO: Test function to display edges between connected units?
     def __init__(
         self,
         *,
@@ -221,7 +221,10 @@ class VillageGridFoundation:
 
 
 def _village_grid_foundation_test() -> None:
-    raise NotImplementedError
+    default_test_grid = VillageGridFoundation()  # Use all default values.
+    default_test_grid.build_village_grid()
+    for grid_unit in default_test_grid:
+        grid_unit._set_test_block()
 
 
 if __name__ == "__main__":
