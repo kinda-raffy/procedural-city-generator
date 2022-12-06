@@ -1,2 +1,4 @@
 village_generator_venv/
-venv/
+venv*/
+.idea/
+.vscode/
