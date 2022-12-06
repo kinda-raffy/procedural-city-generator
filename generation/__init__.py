@@ -1,4 +1,6 @@
 from mcpi.minecraft import Minecraft
 
-
-connection: Minecraft = Minecraft.create()
+try:
+    connection: Minecraft = Minecraft.create()
+except ConnectionRefusedError:
+    print("Failed to connect to Minecraft")
