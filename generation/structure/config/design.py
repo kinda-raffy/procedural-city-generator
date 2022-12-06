@@ -495,6 +495,7 @@ apartment_biome = [
         "roof_corner": blocks["beacon"],
     },
 ]
+
 sand_biome = [
     {
         # Desert birch
