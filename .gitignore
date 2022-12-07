@@ -2,3 +2,4 @@ village_generator_venv/
 venv*/
 .idea/
 .vscode/
+generation/.logs/*
