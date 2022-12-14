@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import IntEnum, auto
 
 
@@ -12,6 +12,6 @@ class Biome(IntEnum):
 
 @dataclass()
 class Vec3:
-    x: int
-    y: int
-    z: int
+    x: int = 0
+    y: int = 0
+    z: int = 0
