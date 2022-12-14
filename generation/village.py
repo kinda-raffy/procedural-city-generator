@@ -4,7 +4,7 @@ from mcpi.minecraft import Minecraft
 from mcpi.vec3 import Vec3
 import mcpi.block as block
 import random
-from generation.building.reference.house import House
+from generation.structure.reference.__legacy_house import House
 
 mc = Minecraft.create()
 post = mc.postToChat
@@ -64,11 +64,11 @@ class Village:
         ground = 0
         sand = 0
         for house_tile in self:
-            if house_tile.terrain == Biome.GROUND:
+            if house_tile.terrain == Biome.GRASSY:
                 ground += 1
-            elif house_tile.terrain == Biome.SAND:
+            elif house_tile.terrain == Biome.DESSERT:
                 sand += 1
-        return Biome.GROUND if ground > sand else Biome.SAND
+        return Biome.GRASSY if ground > sand else Biome.DESSERT
 
     def town_planner(self):
         """
@@ -168,12 +168,12 @@ class Village:
 
         global_biome = self.get_global_biome()
         # Temporary alteration until house class complete.
-        if global_biome == Biome.GROUND:
+        if global_biome == Biome.GRASSY:
             if random.randint(1, 3) == 3:
                 global_biome = 3
             else:
                 global_biome = 0
-        elif global_biome == Biome.SAND:
+        elif global_biome == Biome.DESSERT:
             global_biome = 1
 
         # Instantiate House Objects
@@ -389,7 +389,7 @@ class Village:
                 block_type = block.WOOD_PLANKS.id
                 second_block = block.WOOD.id
                 random_type = None
-            elif road.terrain == Biome.SAND:
+            elif road.terrain == Biome.DESSERT:
                 block_type = block.COBBLESTONE.id
                 random_type = [block.SAND.id]
 
@@ -568,9 +568,9 @@ class Village:
 
     def build_tc(self):
         # Select possible tc functions for each type at random.
-        if self.grid.center.terrain == Biome.SAND:
+        if self.grid.center.terrain == Biome.DESSERT:
             tc_function = random.choice(self.sand_tcs)
-        elif self.grid.center.terrain == Biome.GROUND:
+        elif self.grid.center.terrain == Biome.GRASSY:
             tc_function = random.choice(self.grass_tcs)
         elif self.grid.center.terrain == Biome.WATER:
             tc_function = random.choice(self.water_tcs)
@@ -709,7 +709,7 @@ class Village:
         set_blocks(c.x, c.y + 55, c.z, c.x, c.y + 57, c.z, block.OBSIDIAN.id)
 
     def _tc_fountain(self):
-        if self.grid.center.terrain == Biome.SAND:
+        if self.grid.center.terrain == Biome.DESSERT:
             materials = {
                 "border": (24, 2),
                 "corner": (24, 1),
@@ -750,7 +750,7 @@ class Village:
         set_block(c.x, c.y + 5, c.z, block.WATER.id)
 
     def _tc_nether_portal(self):
-        if self.grid.center.terrain == Biome.SAND:
+        if self.grid.center.terrain == Biome.DESSERT:
             blocks = [
                 block.COBBLESTONE.id,
                 block.SAND.id,
