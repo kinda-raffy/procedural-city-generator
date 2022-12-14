@@ -181,7 +181,7 @@ class House:
                     self.generated_rooms[start_room_name][
                         1
                     ].room_type = "downstairs_stairs"
-                    self.generated_rooms[start_room_name][1].determine_room_type(
+                    self.generated_rooms[start_room_name][1].room_director(
                         stair_type=self.stair_type
                     )
                     # furnishing for ground floor
@@ -212,7 +212,7 @@ class House:
                     self.generated_rooms[start_room_name][
                         1
                     ].room_type = "upstairs_stairs"
-                    self.generated_rooms[start_room_name][1].determine_room_type(
+                    self.generated_rooms[start_room_name][1].room_director(
                         stair_type=self.stair_type
                     )
                     self.global_index += 1
@@ -264,7 +264,7 @@ class House:
                     self.generated_rooms[start_room_name][
                         1
                     ].room_type = "downstairs_stairs"
-                    self.generated_rooms[start_room_name][1].determine_room_type(
+                    self.generated_rooms[start_room_name][1].room_director(
                         stair_type=self.stair_type
                     )
                     # furnishing for downstairs
@@ -281,7 +281,7 @@ class House:
                     self.generated_rooms[start_room_name][
                         1
                     ].room_type = "upstairs_stairs"
-                    self.generated_rooms[start_room_name][1].determine_room_type(
+                    self.generated_rooms[start_room_name][1].room_director(
                         stair_type=self.stair_type
                     )
 
@@ -297,7 +297,7 @@ class House:
                             ].room_type = "downstairs_stairs"
                             self.generated_rooms[start_room_name][
                                 1
-                            ].determine_room_type(stair_type=self.stair_type)
+                            ].room_director(stair_type=self.stair_type)
                             # furnishing for upstairs
                             for i in range(6, 9):
                                 self.create_furnish(gr_list=upstairs, index=i)
@@ -317,7 +317,7 @@ class House:
                             ].room_type = "upstairs_stairs"
                             self.generated_rooms[start_room_name][
                                 1
-                            ].determine_room_type(stair_type=self.stair_type)
+                            ].room_director(stair_type=self.stair_type)
                             # furnishing for the third level
                             for i in range(6, 9):
                                 self.create_furnish(gr_list=third_level, index=i)
@@ -873,9 +873,9 @@ class House:
                 if (index - 3) >= 0 and ground[index - 3][1] is False:
 
                     ground[index][2].room_type = "pool"
-                    ground[index][2].determine_room_type()
+                    ground[index][2].room_director()
                     ground[index - 3][2].room_type = "pool"
-                    ground[index - 3][2].determine_room_type()
+                    ground[index - 3][2].room_director()
                     ground[index - 3][2].add_pool(large=True, direction="horizontal")
                     large_pool = True
                     break
@@ -883,9 +883,9 @@ class House:
                 elif (index - 1) >= 0 and ground[index - 1][1] is False:
                     if "left" not in ground[index][0]:
                         self.generated_rooms[ground[index][2]].room_type = "pool"
-                        ground[index][2].determine_room_type()
+                        ground[index][2].room_director()
                         ground[index - 1][2].room_type = "pool"
-                        ground[index - 1][2].determine_room_type()
+                        ground[index - 1][2].room_director()
                         ground[index - 1][2].add_pool(large=True, direction="vertical")
                         large_pool = True
                     break
@@ -894,18 +894,18 @@ class House:
 
                     if "right" not in ground[index][0]:
                         ground[index][2].room_type = "pool"
-                        ground[index][2].determine_room_type()
+                        ground[index][2].room_director()
                         ground[index + 1][2].room_type = "pool"
-                        ground[index + 1][2].determine_room_type()
+                        ground[index + 1][2].room_director()
                         ground[index + 1][2].add_pool(large=True, direction="vertical")
                         large_pool = True
                     break
                 # find south
                 elif (index + 3) < len(ground) and ground[index + 3][1] is False:
                     ground[index][2].room_type = "pool"
-                    ground[index][2].determine_room_type()
+                    ground[index][2].room_director()
                     ground[index + 3][2].room_type = "pool"
-                    ground[index + 3][2].determine_room_type()
+                    ground[index + 3][2].room_director()
                     ground[index + 3][2].add_pool(large=True, direction="horizontal")
                     large_pool = True
                     break
