@@ -1,139 +1,123 @@
+from generation.structure.cell import Cell
 from abc import ABCMeta, abstractmethod
-from utils.temp import Biome
-from cell import Cell
+from generation.biome import Biome
 from typing import *
 
 
-class IBuilder(metaclass=ABCMeta):
+Blueprint = Dict[int, Cell]
+
+
+class Builder(metaclass=ABCMeta):
+    # TODO ~ Add Documentation.
     def __init__(self, biome: Biome):
-        self.__biome: Biome = biome
-        self.__blueprint: Dict[int, Cell] = self._generate_blueprint()
+        self.__biome: Final[Biome] = biome
+        self.__blueprint: Blueprint = self._generate_blueprint()
 
     def __enter__(self):
         """Initialises environment and perform sanity checks"""
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Logs errors and cleans up"""
+        """Perform clean up and logging"""
         ...
 
+    @final
     def __iter__(self):
         for cell in self.__blueprint:
             yield cell
 
+    @final
     def __len__(self):
         return len([cell for cell in self.__blueprint.values() if isinstance(cell, Cell)])
-
-    @abstractmethod
-    def _generate_blueprint(self) -> Dict[int, Cell]:
-        """Generates a blueprint for the building"""
-        ...
 
     @property
     def get_biome(self) -> Biome:
         return self.__biome
 
     @property
-    def get_blueprint(self) -> Dict[int, Cell]:
+    def get_blueprint(self) -> Blueprint:
         return self.__blueprint
 
-
-class IResidentialBuilder(IBuilder, metaclass=ABCMeta):
     @abstractmethod
-    def create_structure(self) -> None: ...
+    def _generate_blueprint(self) -> Blueprint: ...
 
-    @abstractmethod
-    def create_stairs(self) -> None: ...
 
-    @abstractmethod
-    def create_doors(self) -> None: ...
+class ResidentialBuilder(Builder, metaclass=ABCMeta):
+    def _generate_blueprint(self) -> Blueprint: ...
 
     @abstractmethod
-    def create_roof(self) -> None: ...
+    def create_structure(self) -> NoReturn: ...
 
     @abstractmethod
-    def create_pool(self) -> None: ...
+    def create_stairs(self) -> NoReturn: ...
 
     @abstractmethod
-    def create_windows(self) -> None: ...
+    def create_doors(self) -> NoReturn: ...
+
+    @abstractmethod
+    def create_roof(self) -> NoReturn: ...
+
+    @abstractmethod
+    def create_pool(self) -> NoReturn: ...
+
+    @abstractmethod
+    def create_windows(self) -> NoReturn: ...
 
 
-class HouseBuilder(IResidentialBuilder):
-    def __init__(self, biome: Biome):
-        super().__init__(biome)
+@final
+class HouseBuilder(ResidentialBuilder):
+    def _generate_blueprint(self) -> Blueprint:
+        return super()._generate_blueprint()
 
+    def create_structure(self) -> NoReturn: ...
+
+    def create_stairs(self) -> NoReturn: ...
+
+    def create_doors(self) -> NoReturn: ...
+
+    def create_roof(self) -> NoReturn: ...
+
+    def create_pool(self) -> NoReturn: ...
+
+    def create_windows(self) -> NoReturn: ...
+
+
+@final
+class ApartmentBuilder(ResidentialBuilder):
+    def _generate_blueprint(self) -> Blueprint: ...
+
+    def create_structure(self) -> NoReturn: ...
+
+    def create_stairs(self) -> NoReturn: ...
+
+    def create_doors(self) -> NoReturn: ...
+
+    def create_roof(self) -> NoReturn: ...
+
+    def create_pool(self) -> NoReturn: ...
+
+    def create_windows(self) -> NoReturn: ...
+
+
+@final
+class SkyscraperBuilder(ResidentialBuilder):
     def _generate_blueprint(self) -> Dict[int, Cell]:
-        """Generates a blueprint for the building"""
         ...
 
-    def create_structure(self) -> None:
+    def create_structure(self) -> NoReturn:
         ...
 
-    def create_stairs(self) -> None:
+    def create_stairs(self) -> NoReturn:
         ...
 
-    def create_doors(self) -> None:
+    def create_doors(self) -> NoReturn:
         ...
 
-    def create_roof(self) -> None:
+    def create_roof(self) -> NoReturn:
         ...
 
-    def create_pool(self) -> None:
+    def create_pool(self) -> NoReturn:
         ...
 
-    def create_windows(self) -> None:
-        ...
-
-
-class ApartmentBuilder(IResidentialBuilder):
-    def __init__(self, biome: Biome):
-        super().__init__(biome)
-
-    def _generate_blueprint(self) -> Dict[int, Cell]:
-        """Generates a blueprint for the building"""
-        ...
-
-    def create_structure(self) -> None:
-        ...
-
-    def create_stairs(self) -> None:
-        ...
-
-    def create_doors(self) -> None:
-        ...
-
-    def create_roof(self) -> None:
-        ...
-
-    def create_pool(self) -> None:
-        ...
-
-    def create_windows(self) -> None:
-        ...
-
-
-class SkyscraperBuilder(IResidentialBuilder):
-    def __init__(self, biome: Biome):
-        super().__init__(biome)
-
-    def _generate_blueprint(self) -> Dict[int, Cell]:
-        """Generates a blueprint for the building"""
-        ...
-
-    def create_structure(self) -> None:
-        ...
-
-    def create_stairs(self) -> None:
-        ...
-
-    def create_doors(self) -> None:
-        ...
-
-    def create_roof(self) -> None:
-        ...
-
-    def create_pool(self) -> None:
-        ...
-
-    def create_windows(self) -> None:
+    def create_windows(self) -> NoReturn:
         ...
