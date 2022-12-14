@@ -1,7 +1,7 @@
 # Block enums may be found under utils/block_extension.py
 [meta]
 config_type = 'interior_furnishing'
-supported_size = ['small', 'medium', 'large']   # Each entry must scale.
+supported_size = ['small', 'medium', 'large']   # Each entry must scale to the corresponding element.
 author = "kinda_raffy"
 package = "structure"
 
