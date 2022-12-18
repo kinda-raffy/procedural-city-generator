@@ -56,7 +56,7 @@ class Grid:
     def build(self):
         post(f"Generating matrix. Dimension {self.dimension}.")
         for i in range(self.dimension):
-            x = self.start.x + (i - self.dimension / 2) * self.stride
+            x = self.start.__x + (i - self.dimension / 2) * self.stride
             for j in range(self.dimension):
                 z = self.start.z + (j - self.dimension / 2) * self.stride
                 y = get_height(x, z)
@@ -187,7 +187,7 @@ class Grid:
         total = 0
         cutoff = int(len(self) * threshold)
         for tile in self:
-            if tile.terrain == Biome.TREE:
+            if tile.terrain == Biome.JUNGLE:
                 total += 1
             if total >= cutoff:
                 return True
@@ -195,16 +195,16 @@ class Grid:
 
     def resolve_trees(self, tile=None):
         if tile is None:
-            trees = [x for x in self if x.terrain == Biome.TREE]
+            trees = [x for x in self if x.terrain == Biome.JUNGLE]
         else:
             trees = [tile]
-            if tile.terrain != Biome.TREE:
+            if tile.terrain != Biome.JUNGLE:
                 return
         for tile in trees:
-            x = tile.position.x
+            x = tile.position.__x
             z = tile.position.z
             while True:
-                if get_block(x, tile.position.y, z) in {
+                if get_block(x, tile.position.__y, z) in {
                     1,
                     2,
                     3,
@@ -225,16 +225,16 @@ class Grid:
                 }:
                     set_blocks(
                         x - 1,
-                        tile.position.y + 1,
+                        tile.position.__y + 1,
                         z - 1,
                         x + 2,
-                        tile.position.y + 20,
+                        tile.position.__y + 20,
                         z + 2,
                         block.AIR.id,
                     )
                     tile.terrain = tile.find_terrain()
                     break
-                tile.position.y -= 1
+                tile.position.__y -= 1
 
     def find_tile(self, coordinate=None, vector=None):
         if isinstance(vector, Vec3):
@@ -276,10 +276,10 @@ class Grid:
         return True
 
     def calculate_weight(self, tile_a, tile_b):
-        prohibited = {Biome.LAVA, Biome.TREE}
+        prohibited = {Biome.LAVA, Biome.JUNGLE}
         if (tile_a.terrain in prohibited) or (tile_b.terrain in prohibited):
             return None
-        difference = abs(tile_a.position.y - tile_b.position.y)
+        difference = abs(tile_a.position.__y - tile_b.position.__y)
         if difference > self.tolerance:
             return None
 
@@ -348,17 +348,17 @@ class Grid:
 
     def show_edges(self, tile):
         for neighbour in self.adjacency_list[tile]:
-            if neighbour.position.x > tile.position.x:
+            if neighbour.position.__x > tile.position.__x:
                 mc.setBlock(
-                    tile.position.x + 2,
-                    tile.position.y,
+                    tile.position.__x + 2,
+                    tile.position.__y,
                     tile.position.z,
                     block.STONE.id,
                 )
             if neighbour.position.z > tile.position.z:
                 mc.setBlock(
-                    tile.position.x,
-                    tile.position.y,
+                    tile.position.__x,
+                    tile.position.__y,
                     tile.position.z + 2,
                     block.STONE.id,
                 )
@@ -498,11 +498,11 @@ class Tile:
         elif under in {10, 11}:
             return Biome.LAVA
         elif under in {18, 81, 83, 39, 40, 17, 261, 579, 580}:
-            return Biome.TREE
+            return Biome.JUNGLE
         elif under in {12, 24}:
-            return Biome.SAND
+            return Biome.DESSERT
         else:
-            return Biome.GROUND
+            return Biome.GRASSY
 
 
 def main():
