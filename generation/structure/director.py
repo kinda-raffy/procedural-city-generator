@@ -1,37 +1,38 @@
+# FIXME ~ Narrow
 from errors.structure import DirectorDoesNotExist
-from utils.temp import Vec3
+from generation.biome import Biome
+from mcpi.vec3 import Vec3
 from builder import *
 from typing import *
 from abc import *
+from enum import *
 
 
-class Director(metaclass=ABCMeta):
-    """Interface"""
+class Director(Protocol):
+    """Director Interface."""
     # TODO ~ Add Documentation.
 
-    @abstractmethod
-    def build(self) -> NoReturn: ...
+    def build(self) -> NoReturn:
+        """Builds the structure through a given builder."""
 
 
 @final
-class ResidentialDirector(Director):
+class ResidentialDirector:
     def __init__(
             self,
             builder: Type[ResidentialBuilder],
             biome: Biome,
             /, *,
-            center: Vec3,
-            door: Vec3,
+            dimensions: Vec3,
+            entry: Vec3,
     ) -> NoReturn:
-        self.__builder: Final[
-            Type[ResidentialBuilder]
-        ] = builder
-        self.__biome:   Final[Biome] = biome
-        self.__center:  Final[Vec3] = center
-        self.__door:    Final[Vec3] = door
+        self._builder: Final = builder
+        self._biome: Final = biome
+        self._size: Final = dimensions
+        self._door: Final = entry
 
     def build(self) -> NoReturn:
-        with self.__builder(Biome()) as builder:
+        with self._builder(self._biome) as builder:
             builder.create_structure()
             builder.create_stairs()
             builder.create_doors()
@@ -42,35 +43,46 @@ class ResidentialDirector(Director):
 
 @final
 class DirectorFactory:
-    """Director factory that determines an appropriate director at runtime."""
+    """Determines an appropriate director at runtime."""
     # TODO ~ Add Documentation.
-    D = TypeVar('Director', bound=Director)
 
-    @staticmethod
+    __builder_to_director_map: Final = {
+        'ResidentialBuilder': ResidentialDirector
+    }
+
+    @classmethod
     def register(
+            cls,
             builder: Type[Builder],
-            center: Vec3,
-            door: Vec3,
-            biome: Biome
-    ) -> Type[D]:
+            /,
+            biome: Biome,
+            *,
+            structure_center: Vec3,
+            entry: Vec3,
+    ) -> Director:
         """
-        Factory control switch. Registers a compatible director for a given builder.
+        Registers a house request with an appropriate director.
         :return: An instantiated concrete director class.
         """
-        # Grab inheritance tree.
-        parent_tree = [cls.__name__ for cls in builder.__mro__]
-        if "ResidentialBuilder" in parent_tree:
-            return ResidentialDirector(builder, center, door, biome)
-        elif "CommercialBuilder" in parent_tree:
-            raise NotImplementedError
-        elif "ParkBuilder" in parent_tree:
-            raise NotImplementedError
-        else:
-            raise DirectorDoesNotExist(builder)
+        # Compatible builder will be the first encountered
+        # under C3 linearization.
+        for builder_ in [cls_.__name__ for cls_ in builder.__mro__]:
+            if builder_ in cls.__builder_to_director_map:
+                return cls.__builder_to_director_map[builder_](
+                    builder,
+                    biome,
+                    structure_center=structure_center,
+                    entry=entry
+                )
 
 
 def debug() -> NoReturn:
-    house = DirectorFactory.register(HouseBuilder, Vec3(), Vec3(), Biome())
+    house: Director = DirectorFactory.register(
+        HouseBuilder,
+        Biome.GRASSY,
+        structure_center=Vec3(1, 1, 1),
+        entry=Vec3(2, 1, 1),
+    )
     house.build()
 
 
