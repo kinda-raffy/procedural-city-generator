@@ -1,3 +1,4 @@
+# FIXME ~ Arrange imports
 from typing import (
     Dict, Any, Union,
     NotRequired,
@@ -10,6 +11,11 @@ from dataclasses import (
 from utils.block_extension import BlockExt as BlocEx
 from cell import Cell
 import tomllib
+
+__all__ = [
+    "InteriorPack",
+    "Interior"
+]
 
 
 class InteriorPack(TypedDict):
@@ -70,12 +76,13 @@ class Interior:
     A collection of furniture for a given cell.
     """
     blueprint: Dict[str, Cell]
-    interior_collection: InteriorCollection = field(init=False, default_factory=_load_interior_collection)
+    interior_collection: InteriorCollection = field(
+        init=False, default_factory=_load_interior_collection
+    )
 
     def place_interior(self) -> None:
-        pass
+        """Place interior furniture over a given signature."""
 
     @staticmethod
     def get_interior_pack() -> InteriorPack:
         """Grab a random interior pack for a cell."""
-        ...
