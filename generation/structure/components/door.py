@@ -32,7 +32,7 @@ class Door(metaclass=ABCMeta):
 class OakDoor(Door):
     """A legacy oak door."""
     def place_single_door(self) -> NoReturn:
-        # Make room
+        # Create room.
         server_conn.setBlocks(
             self._pos + Vec3(0, 0, 0),
             self._pos + Vec3(0, 1, 0),
@@ -61,7 +61,7 @@ class OakDoor(Door):
 class NonOakDoor(Door):
     """A non-oak door with contemporary secondary codes."""
     def place_single_door(self) -> NoReturn:
-        # Make room
+        # Create room.
         server_conn.setBlocks(
             self._pos + Vec3(0, 0, 0),
             self._pos + Vec3(0, 1, 0),
