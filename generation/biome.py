@@ -2,10 +2,14 @@ from enum import (
     Enum,
     verify,
     global_enum,
-    CONTINUOUS
+    CONTINUOUS,
+    unique,
 )
 
+__all__ = ['Biome']
 
+
+@unique
 @global_enum
 @verify(CONTINUOUS)
 class Biome(Enum):
