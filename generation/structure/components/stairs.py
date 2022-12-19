@@ -232,8 +232,8 @@ class StairFactory:
     def create(
         cls,
         cell_center: Vec3,
-        materials: MaterialPack,
         /,
+        materials: MaterialPack,
         stair_type: StairType,
     ) -> Stair:
         return cls.__stair_types[stair_type](cell_center, materials)
