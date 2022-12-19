@@ -4,7 +4,7 @@ from enum import *
 from typing import *
 import random
 
-from generation.structure.components.roof import Roof
+from generation.structure.components.roof import Roof, RoofType, RoofFactory
 from generation.structure.components.door import DoorFactory, Door
 from generation.structure.utils.block_extension import BlockExt as BlocEx
 from generation.structure.env import MaterialPack
@@ -413,17 +413,18 @@ class PoolStructureFactory:
     def create(
             cls,
             cell_center: Vec3,
-            material: MaterialPack,
             /,
+            material: MaterialPack,
             pool_type: PoolStructureType,
             *,
-            pool_roof: Roof
+            pool_roof: RoofType
     ) -> PoolStructure:
         """Create a pool structure of the specified type."""
+        roof: Roof = RoofFactory.create(cell_center, material, pool_roof)
         return cls.__pool_structures[pool_type](
             cell_center,
             material,
-            pool_roof=pool_roof
+            pool_roof=roof
         )
 
 
