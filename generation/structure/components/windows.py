@@ -2,6 +2,7 @@ from abc import *
 from typing import *
 from enum import *
 from generation import connection as server_conn
+from generation.structure.cell import CellDirection
 from generation.structure.env import MaterialPack
 from mcpi.vec3 import Vec3
 
@@ -26,7 +27,7 @@ class WindowPos(NamedTuple):
     stop: Vec3
 
 
-class BaseWindow(metaclass=ABCMeta):
+class Window(metaclass=ABCMeta):
     """Window Interface."""
 
     def __init__(
@@ -44,7 +45,7 @@ class BaseWindow(metaclass=ABCMeta):
         """Places the window."""
 
 
-class DirectionalWindow(BaseWindow, metaclass=ABCMeta):
+class DirectionalWindow(Window, metaclass=ABCMeta):
     """Windows were placement varies depending on direction."""
 
     def __init__(
@@ -75,7 +76,7 @@ class DirectionalWindow(BaseWindow, metaclass=ABCMeta):
         """Places the window horizontally."""
 
 
-class DoubleBarWindow(BaseWindow):
+class DoubleBarWindow(Window):
 
     def place(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
@@ -87,7 +88,7 @@ class DoubleBarWindow(BaseWindow):
         )
 
 
-class HorizontalStripWindow(BaseWindow):
+class HorizontalStripWindow(Window):
 
     def place(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
@@ -153,7 +154,7 @@ class SingleCenterWindow(DirectionalWindow):
         )
 
 
-class FullWindow(BaseWindow):
+class FullWindow(Window):
 
     def place(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
@@ -183,13 +184,18 @@ class WindowFactory:
     @classmethod
     def create(
             cls,
-            window_pos: WindowPos,
+            cell_center: Vec3,
             material: MaterialPack,
             /,
+            cell_window_faces: CellDirection,
             window_type: WindowType = WindowType.FULL,
             *,
             direction: WindowOrientation = None
-    ) -> BaseWindow:
+    ) -> Window:
+        # Determine the window position.
+        window_pos: WindowPos = WindowFactory._get_window_pos(
+            cell_center, cell_window_faces
+        )
         if direction is None:
             return cls.__base_window_types[window_type](window_pos, material)
         else:
@@ -198,3 +204,11 @@ class WindowFactory:
                 material,
                 direction=direction
             )
+
+    @staticmethod
+    def _get_window_pos(
+            cell_center: Vec3,
+            cell_window_face: CellDirection
+    ) -> WindowPos:
+        """TODO: Implement this."""
+        return WindowPos(Vec3(0, 0, 0), Vec3(0, 0, 0))
