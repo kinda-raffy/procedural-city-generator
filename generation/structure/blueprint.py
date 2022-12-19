@@ -11,7 +11,6 @@ __all__ = [
     'CellStorage',
     'CellStorageLevel',
     'CellStorageRow',
-    'Direction',
     'Blueprint',
     'ResidentialBlueprint',
     'HouseBlueprint',
@@ -21,10 +20,11 @@ __all__ = [
     'BlueprintFactory',
 ]
 
+from generation.structure.errors.structure import CellDoesNotExist
+
 CellStorage = List[List[List[Cell]]]
 CellStorageLevel = List[List[Cell]]
 CellStorageRow = List[Cell]
-Direction = Literal['NORTH', 'SOUTH', 'EAST', 'WEST', 'UP', 'DOWN']
 
 
 class Blueprint(metaclass=ABCMeta):
@@ -61,7 +61,7 @@ class Blueprint(metaclass=ABCMeta):
         self._merge_factor: Final = merge_factor
         self._min_cells_per_level: Final = min_cells if min_cells else \
             (self._dimensions.x * self._dimensions.z) // 2
-        # 3D Cell storage [level][row][column].
+        # 3D Cell storage ~ [level][row][column].
         self._cells: CellStorage = [
             [list() for _ in range(self._dimensions.x)]
             for _ in range(self._permissible_levels)
@@ -71,7 +71,7 @@ class Blueprint(metaclass=ABCMeta):
             [None for _ in range(self._permissible_levels)]
 
     def run_engine(self) -> NoReturn:
-        """Define the order in which a blueprint is generated."""
+        """Define the order in which generate a blueprint."""
         self._create_graph()
         self._connect_graph()
         self._plan_structure()
@@ -266,19 +266,15 @@ class Blueprint(metaclass=ABCMeta):
         return f'Structure(levels:{self._permissible_levels}, cells:{len(self)})'
 
     @final
-    def __setitem__(self, level: int, cell: Cell) -> NoReturn:
-        # Set entrance node on a level basis.
-        assert level <= self._permissible_levels, \
-            f'{level} is higher then what is permitted: {self._permissible_levels}'
-        cell.type_ = CellType.STRUCTURE_ENTRY if level == 0 else CellType.LEVEL_ENTRY
-        self._entrances[level] = cell
-
-    @final
-    def __getitem__(self, level: int) -> Cell:
-        # Get entrance node on a level basis.
-        assert level <= self._permissible_levels, \
-            f'{level} is higher then what is permitted: {self._permissible_levels}'
-        return self._entrances[level]
+    def __getitem__(self, pos: Vec3) -> Optional[Cell]:
+        # Get cell by position.
+        cell: Optional[Cell] = next(
+            (cell for cell in self if cell.pos == pos),
+            None
+        )
+        if cell is None:
+            raise CellDoesNotExist(pos)
+        return cell
 
     @property
     def signature(self) -> CellStorage:
