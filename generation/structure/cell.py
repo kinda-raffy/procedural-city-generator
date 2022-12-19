@@ -73,16 +73,31 @@ class Cell:
             f'{other!r} is not a neighbour of {self!r}'
         self._merged_cells.add(other)
 
+    def get_merged_directions(self) -> Tuple[CellDirection, ...]:
+        return tuple(
+            [CellDirection[direction]
+             for direction, neighbour in self._neighbours.items()
+             if neighbour in self._merged_cells]
+        )
+
     def faces_environment(self) -> bool:
         return any(
             [neighbour is None or neighbour._type == CellType.DETACHED
                 for neighbour in self._neighbours.values()]
         )
 
-    def faces_environment_direction(self) -> tuple:
+    def faces_environment_direction(self) -> Tuple[CellDirection, ...]:
         return tuple(
-            [direction for direction, neighbour in self._neighbours.items()
+            [CellDirection[direction]
+             for direction, neighbour in self._neighbours.items()
              if neighbour is None or neighbour._type == CellType.DETACHED]
+        )
+
+    def faces_internal_directions(self) -> Tuple[CellDirection, ...]:
+        return tuple(
+            [CellDirection[internal_direction]
+             for internal_direction in CellDirection
+             if internal_direction not in self.faces_environment_direction()]
         )
 
     def __len__(self):
