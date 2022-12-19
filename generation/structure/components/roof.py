@@ -248,8 +248,8 @@ class RoofFactory:
             cell_center: Vec3,
             /,
             materials: MaterialPack,
-            *,
             roof_type: RoofType,
+            *,
             cell_dim: Vec3 = Vec3(4, 4, 4)
     ) -> Roof:
         return cls.__roof_types[roof_type](
