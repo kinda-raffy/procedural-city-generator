@@ -1,12 +1,23 @@
-# FIXME ~ Narrow
-from abc import *
-from enum import *
-from typing import *
-
+from __future__ import annotations
 from generation.structure.utils.block_extension import BlockExt as BlocEx
 from generation.structure.env import MaterialPack
 from generation import connection as server_conn
 from mcpi.vec3 import Vec3
+
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
+from typing import (
+    NoReturn,
+    Final,
+    final,
+)
+
+__all__ = [
+    'Door',
+    'DoorFactory',
+]
 
 
 class Door(metaclass=ABCMeta):
@@ -29,6 +40,7 @@ class Door(metaclass=ABCMeta):
         """Places a double door."""
 
 
+@final
 class OakDoor(Door):
     """A legacy oak door."""
     def place_single_door(self) -> NoReturn:
@@ -58,6 +70,7 @@ class OakDoor(Door):
         super(OakDoor, self).place_double_door()
 
 
+@final
 class NonOakDoor(Door):
     """A non-oak door with contemporary secondary codes."""
     def place_single_door(self) -> NoReturn:
