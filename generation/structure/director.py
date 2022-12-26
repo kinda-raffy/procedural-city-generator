@@ -1,11 +1,24 @@
-# FIXME ~ Narrow
-from errors.structure import DirectorDoesNotExist
+from __future__ import annotations
+from builder import (
+    Builder,
+    ResidentialBuilder,
+    HouseBuilder
+)
 from generation.biome import Biome
 from mcpi.vec3 import Vec3
-from builder import *
-from typing import *
-from abc import *
-from enum import *
+
+from typing import (
+    Protocol,
+    NoReturn,
+    Type,
+    Final,
+    final
+)
+
+__all__ = [
+    'Director',
+    'DirectorFactory',
+]
 
 
 class Director(Protocol):
@@ -25,14 +38,21 @@ class ResidentialDirector:
             /, *,
             dimensions: Vec3,
             entry: Vec3,
+            center: Vec3
     ) -> NoReturn:
         self._builder: Final = builder
         self._biome: Final = biome
         self._size: Final = dimensions
-        self._door: Final = entry
+        self._entrance: Final = entry
+        self._center: Final = center
 
     def build(self) -> NoReturn:
-        with self._builder(self._biome) as builder:
+        with self._builder(
+            self._biome,
+            build_dimensions=self._size,
+            entry=self._entrance,
+            center=self._center
+        ) as builder:
             builder.create_structure()
             builder.create_stairs()
             builder.create_doors()
@@ -56,9 +76,10 @@ class DirectorFactory:
             builder: Type[Builder],
             /,
             biome: Biome,
+            size: Vec3,
             *,
-            structure_center: Vec3,
             entry: Vec3,
+            center: Vec3,
     ) -> Director:
         """
         Registers a house request with an appropriate director.
@@ -71,8 +92,9 @@ class DirectorFactory:
                 return cls.__builder_to_director_map[builder_](
                     builder,
                     biome,
-                    structure_center=structure_center,
-                    entry=entry
+                    dimensions=size,
+                    entry=entry,
+                    center=center
                 )
 
 
@@ -80,8 +102,9 @@ def debug() -> NoReturn:
     house: Director = DirectorFactory.register(
         HouseBuilder,
         Biome.GRASSY,
-        structure_center=Vec3(1, 1, 1),
-        entry=Vec3(2, 1, 1),
+        size=Vec3(10, 10, 10),
+        entry=Vec3(0, 0, 5),
+        center=Vec3(5, 5, 5)
     )
     house.build()
 
