@@ -277,7 +277,7 @@ class Blueprint(metaclass=ABCMeta):
                 yield cell
                 cells_to_explore: List[Cell] = [
                     c for k, c in cell.neighbours.items()
-                    if _predicate(k, c) and c is not None
+                    if c is not None and _predicate(k, c)
                 ]
                 queue.extend(cells_to_explore)
 
@@ -362,12 +362,11 @@ class Blueprint(metaclass=ABCMeta):
 
 class ResidentialBlueprint(Blueprint):
     def _plan_structure(self) -> NoReturn:
-        """Plan the structure blueprint."""
+        """Delegates the planning of the structure blueprint."""
         self._create_structure_entry()
         self._plan_ground_level()
         # Plan all other levels.
         for level_no in range(1, self._permissible_levels):
-            # FIXME ~
             self._plan_higher_level(level_no)
         # Create rooms out of smaller cells.
         self._merge_cells()
@@ -396,17 +395,18 @@ class ResidentialBlueprint(Blueprint):
         )
 
     def _plan_higher_level(self, level_no: int) -> NoReturn:
+        # Entrance to level is on previous level.
         level_entry: Cell = self._create_higher_level_entry(level_no)
+        # Current floor.
+        above_level_entry: Optional[Cell] = level_entry.neighbours.get('UP')
         # Reserve the room above level entry.
-        above_level_access: Optional[Cell] = level_entry.neighbours.get('UP')
-        if above_level_access is not None:
-            above_level_access.type_ = CellType.ABOVE_LEVEL_ENTRY
-
+        if above_level_entry is not None:
+            above_level_entry.type_ = CellType.ABOVE_LEVEL_ENTRY
         # Generate the level.
         self._level_traversal(
-            level_entry,
-            _predicate=lambda k, c:
-            k not in ('UP', 'DOWN') and c.neighbours.get('DOWN') is not None
+            above_level_entry,
+            _predicate=lambda k, c: k not in ('UP', 'DOWN') and
+                                    c.neighbours.get('DOWN') is not None
         )
 
     def _create_higher_level_entry(
@@ -416,19 +416,19 @@ class ResidentialBlueprint(Blueprint):
         assert level_no <= self._permissible_levels, \
             f'{level_no} is higher then what is permitted: {self._permissible_levels}'
         assert level_no != 0, 'Level 0 is the structure entry.'
-        # Find a suitable level entry on the previous floor.
+        # Find suitable level entry on the previous floor.
         previous_level_no: int = level_no - 1
         level_entry: Optional[Cell] = self._get_random_cell(
             previous_level_no,
-            _predicate=lambda c: c.type_ == CellType.REGULAR
-            and c.neighbours.get('UP') is not None
+            _predicate=lambda c: c.type_ == CellType.REGULAR and
+                                 c.neighbours.get('UP') is not None
         )
-        # Sanity check in case level guidelines are not followed.
+        # Ensure level guidelines are followed.
         assert level_entry is not None, \
             f'No cells found on level {previous_level_no}.'
         level_entry.type_ = CellType.LEVEL_ENTRY
-        # Entrance for the current level.
-        level_entry.neighbours['UP'].type_ = CellType.ABOVE_LEVEL_ENTRY
+        self._entrances[level_no] = level_entry
+        # Above level entry handled by level planner.
         return level_entry
 
     def _level_traversal(
@@ -448,13 +448,14 @@ class ResidentialBlueprint(Blueprint):
                     _predicate=_predicate
                 )
         ):
-            halt_traversal: bool = self._explore_factor > random.random()
+            halt_traversal: bool = random.random() > self._explore_factor
             if halt_traversal and cell_count > self._min_cells_per_level:
                 break
             if cell is not start_cell:
                 cell.type_ = generative_type
 
     def _merge_cells(self) -> NoReturn:
+        assert None not in self._entrances, f'Entrance(s) missing.'
         # Create larger cells by merging smaller ones.
         for entry in self._entrances:
             for cell in self.breadth_traversal(
@@ -463,12 +464,12 @@ class ResidentialBlueprint(Blueprint):
                     k not in ('UP', 'DOWN') and
                     c.type_ in (CellType.REGULAR, CellType.EMPTY)
             ):
-                merge_cell: bool = self._merge_factor > random.random()
+                merge_cell: bool = random.random() > self._merge_factor
                 if not merge_cell:
                     continue
                 if other := self._get_random_cell_neighbour(
                         cell,
-                        _predicate=lambda c:
+                        _predicate=lambda _, c:
                         c.type_ in (CellType.REGULAR, CellType.EMPTY)
                 ):
                     cell.add_merged_cell(other)
@@ -511,6 +512,7 @@ class BlueprintFactory:
             size: Vec3,
             /,
             entrance: Vec3,
+            center: Vec3,
             *,
             explore_factor: Annotated[
                 float, '0 <= x <= 1'
@@ -525,6 +527,7 @@ class BlueprintFactory:
         return cls.__blueprint_types[type_](
             size,
             entrance,
+            center,
             explore_factor=explore_factor,
             merge_factor=merge_factor,
             min_cells=min_cells
