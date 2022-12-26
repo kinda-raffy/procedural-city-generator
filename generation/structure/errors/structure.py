@@ -1,14 +1,22 @@
-from typing import Type, NoReturn
-from generation.biome import Biome
-from generation.structure.builder import Builder
-from mcpi.vec3 import Vec3
+from __future__ import annotations
+from typing import (
+    Type,
+    NoReturn,
+    TYPE_CHECKING,
+)
+
+if TYPE_CHECKING:
+    from mcpi.vec3 import Vec3
+    from generation.biome import Biome
+    from generation.structure.builder import Builder
+
 
 __all__ = [
     'DirectorDoesNotExist',
     'BiomeNotImplemented',
     'BiomeDoesNotExist',
+    'BuilderNotImplemented',
     'CellDoesNotExist',
-    'BuilderNotImplemented'
 ]
 
 
