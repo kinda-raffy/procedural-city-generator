@@ -1,15 +1,49 @@
-# FIXME ~ Narrow
-from abc import *
-from enum import *
-from typing import *
+from __future__ import annotations
+from generation import connection as server_conn
+from generation.structure.components.door import (
+    DoorFactory,
+    Door
+)
+from generation.structure.components.roof import (
+    Roof,
+    RoofType,
+    RoofFactory
+)
+from generation.structure.utils.block_extension \
+    import BlockExt as BlocEx
+from generation.structure.env import MaterialPack
+from mcpi.vec3 import Vec3
+
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
+from enum import (
+    Enum,
+    unique,
+    auto,
+)
+from typing import (
+    NamedTuple,
+    runtime_checkable,
+    Protocol,
+    NoReturn,
+    Optional,
+    Final,
+    final,
+)
 import random
 
-from generation.structure.components.roof import Roof, RoofType, RoofFactory
-from generation.structure.components.door import DoorFactory, Door
-from generation.structure.utils.block_extension import BlockExt as BlocEx
-from generation.structure.env import MaterialPack
-from generation import connection as server_conn
-from mcpi.vec3 import Vec3
+__all__ = [
+    'VecRange',
+    'JoinOrientation',
+    'PoolStructureType',
+    'Pool',
+    'CellPool',
+    'PoolStructure',
+    'PoolStructureFactory',
+    'PoolFacade',
+]
 
 
 class VecRange(NamedTuple):
