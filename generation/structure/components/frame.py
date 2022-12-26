@@ -1,11 +1,28 @@
-# FIXME ~ Narrow
-from abc import *
-from typing import *
-from mcpi.vec3 import Vec3
+from __future__ import annotations
 from generation import connection as server_conn
-from generation.structure.cell import CellDirection, Cell
+from generation.structure.cell import (
+    CellDirection,
+    Cell
+)
 from generation.structure.env import MaterialPack
 from generation.structure.utils.block_extension import BlockExt as BlocEx
+from mcpi.vec3 import Vec3
+
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
+from typing import (
+    NoReturn,
+    Final,
+    Dict,
+    Tuple, List,
+)
+
+__all__ = [
+    'Frame',
+    'DefaultFrame',
+]
 
 
 class Frame(metaclass=ABCMeta):
@@ -112,19 +129,25 @@ class DefaultFrame(Frame):
         )
 
     def set_external_pillars(self) -> NoReturn:
-        external_sides: Tuple[CellDirection, ...] = \
-            self._cell.faces_environment_direction()
+        external_sides: List[CellDirection, ...] = [
+            direction for direction in self._cell.faces_environment_direction()
+            if direction not in (CellDirection.UP, CellDirection.DOWN)
+        ]
         for side in external_sides:
             self._set_pillar(side)
 
     def set_internal_pillars(self) -> NoReturn:
-        internal_sides: Tuple[CellDirection, ...] = \
-            self._cell.faces_internal_directions()
+        internal_sides: List[CellDirection, ...] = [
+            direction for direction in self._cell.faces_environment_direction()
+            if direction not in (CellDirection.UP, CellDirection.DOWN)
+        ]
         for side in internal_sides:
             self._set_pillar(side)
 
     def _set_pillar(self, direction: CellDirection) -> NoReturn:
         # TODO ~ Verify vectors.
+        assert direction not in (CellDirection.UP, CellDirection.DOWN), \
+            "Pillars may only be placed horizontally."
         server_conn.setBlocks(
             self._cell_direction_pos[direction],
             self._cell_direction_pos[direction] + Vec3(0, self._cell_dim.y, 0),
