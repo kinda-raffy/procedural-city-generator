@@ -1,20 +1,84 @@
-# FIXME ~ Narrow
-from generation.structure.cell import Cell, CellType, CellDirection
-from generation.structure.components.frame import Frame, DefaultFrame
-from generation.structure.components.stairs import *
-from generation.structure.components.door import *
-from generation.structure.components.pool import *
-from generation.structure.components.roof import *
-from generation.structure.components.windows import *
-from abc import ABCMeta, abstractmethod
-from generation.biome import Biome
-from mcpi.vec3 import Vec3
-from typing import *
-from env import *
-from blueprint import *
-from collections import *
+from __future__ import annotations
+# Components.
+from generation.structure.components.frame import (
+    Frame,
+    DefaultFrame,
+)
+from generation.structure.components.stairs import (
+    Stair,
+    StairFactory,
+    StairType,
+)
+from generation.structure.components.door import (
+    Door,
+    DoorFactory,
+)
+from generation.structure.components.pool import (
+    Pool,
+    CellPool,
+    PoolFacade,
+    PoolStructure,
+    PoolStructureType,
+    PoolStructureFactory,
+)
+from generation.structure.components.roof import (
+    Roof,
+    RoofFactory,
+    RoofType,
+)
+from generation.structure.components.windows import (
+    Window,
+    WindowFactory,
+    WindowType,
+)
 
+# Structure.
+from generation.structure.cell import (
+    CellType,
+    CellDirection,
+)
+from env import (
+    MaterialPack,
+    Environment,
+)
+from blueprint import (
+    Blueprint,
+    BlueprintType,
+    BlueprintFactory,
+)
+
+from mcpi.vec3 import Vec3
+from generation.biome import Biome
 from generation.structure.errors.structure import BuilderNotImplemented
+
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
+from enum import Enum
+from typing import (
+    TypedDict,
+    Optional,
+    Tuple,
+    Final,
+    NoReturn,
+    List,
+    Self,
+    final,
+)
+
+import random
+
+
+__all__ = [
+    'GlobalComponentsPreference',
+    'GlobalComponents',
+    'Builder',
+    'ResidentialBuilder',
+    'HouseBuilder',
+    'ApartmentBuilder',
+    'SkyscraperBuilder',
+]
 
 
 class GlobalComponentsPreference(TypedDict):
@@ -54,10 +118,12 @@ class Builder(metaclass=ABCMeta):
             /, *,
             build_dimensions: Vec3,
             entry: Vec3,
+            center: Vec3
     ):
-        self._biome: Final = biome,
+        self._biome: Final[Biome] = biome,
         self._size: Final = build_dimensions
         self._entrance: Final = entry
+        self._structure_center: Final = center
         self._blueprint: Optional[Blueprint] = None
         self._materials: Optional[MaterialPack] = None
         self._global_component_spec: Optional[
@@ -162,7 +228,7 @@ class HouseBuilder(ResidentialBuilder):
         return {
             'StairType': None,
             'RoofType': None,
-            'WindowType': None,
+            'WindowType': (WindowType.DOUBLE_BAR, WindowType.HORIZONTAL_STRIP, WindowType.FULL),
             'PoolStructureType': None,
         }  # No preferences.
 
@@ -171,6 +237,8 @@ class HouseBuilder(ResidentialBuilder):
             BlueprintType.HOUSE,
             self._size,
             entrance=self._entrance,
+            center=self._structure_center,
+            explore_factor=0.5
         )
         blueprint.run_engine()
         return blueprint
@@ -192,8 +260,7 @@ class HouseBuilder(ResidentialBuilder):
         stair_type: StairType = self._global_component_spec['StairType']
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
-                _predicate=lambda k, c:
-                c.type == CellType.LEVEL_ENTRY
+                _predicate=lambda k, c: c.type_ == CellType.LEVEL_ENTRY
         ):
             stair: Stair = StairFactory().create(
                 cell.pos,
@@ -217,7 +284,7 @@ class HouseBuilder(ResidentialBuilder):
         roof_type: RoofType = self._global_component_spec['RoofType']
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
-                _predicate=lambda k, c: c.type != CellType.POOL
+                _predicate=lambda k, c: c.type_ != CellType.POOL
         ):
             roof: Roof = RoofFactory().create(
                 cell.pos,
@@ -234,7 +301,7 @@ class HouseBuilder(ResidentialBuilder):
         roof_type: RoofType = self._global_component_spec['RoofType']
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
-                _predicate=lambda k, c: c.type == CellType.POOL
+                _predicate=lambda k, c: c.type_ == CellType.POOL
         ):
             pool: Pool = CellPool(
                 cell.pos,
@@ -253,7 +320,11 @@ class HouseBuilder(ResidentialBuilder):
             pool_facade.build()
 
     def create_windows(self) -> NoReturn:
+        # TODO ~ Add builder support for directional windows.
         # Overrides global windows.
+        window_type: WindowType = random.choice(
+            [WindowType.DOUBLE_BAR, WindowType.HORIZONTAL_STRIP, WindowType.FULL]
+        )
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
                 _predicate=lambda k, c: c.faces_environment()
@@ -265,7 +336,7 @@ class HouseBuilder(ResidentialBuilder):
                     cell.pos,
                     self._materials,
                     cell_window_faces=face,
-                    window_type=random.choice(list(WindowType)),
+                    window_type=window_type,
                 )
                 window.place()
 
@@ -299,6 +370,7 @@ class ApartmentBuilder(ResidentialBuilder):
             BlueprintType.APARTMENT,
             self._size,
             entrance=self._entrance,
+            center=self._structure_center,
         )
         blueprint.run_engine()
         return blueprint
@@ -331,6 +403,7 @@ class SkyscraperBuilder(ResidentialBuilder):
             BlueprintType.SKYSCRAPER,
             self._size,
             entrance=self._entrance,
+            center=self._structure_center,
         )
         blueprint.run_engine()
         return blueprint
