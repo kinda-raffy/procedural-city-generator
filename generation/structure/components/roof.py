@@ -1,8 +1,26 @@
+from __future__ import annotations
 from generation import connection as server_conn
 from generation.structure.env import MaterialPack
 from mcpi.vec3 import Vec3
-from typing import *    # FIXME ~ Narrow
-from enum import *      # FIXME ~ Narrow
+
+from typing import (
+    runtime_checkable,
+    Protocol,
+    NoReturn,
+    Final,
+    final,
+)
+from enum import (
+    StrEnum,
+    unique,
+    auto,
+)
+
+__all__ = [
+    'RoofType',
+    'Roof',
+    'RoofFactory',
+]
 
 
 @unique

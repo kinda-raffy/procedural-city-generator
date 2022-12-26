@@ -1,6 +1,8 @@
-# FIXME ~ Arrange imports
+from utils.block_extension import BlockExt as BlocEx
+from cell import Cell
 from typing import (
-    Dict, Any, Union,
+    Dict,
+    Union,
     NotRequired,
     TypedDict,
 )
@@ -8,8 +10,6 @@ from dataclasses import (
     dataclass,
     field
 )
-from utils.block_extension import BlockExt as BlocEx
-from cell import Cell
 import tomllib
 
 __all__ = [

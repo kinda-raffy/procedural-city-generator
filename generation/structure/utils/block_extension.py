@@ -1,14 +1,22 @@
-from enum import ReprEnum, unique
+from __future__ import annotations
+from enum import (
+    ReprEnum,
+    unique
+)
+
+__all__ = [
+    'BlockExt',
+]
 
 
 @unique
 class BlockExt(tuple, ReprEnum):
     """
-    Extended blocks under @kinda_raffy/procedural_city_generator.generator.structure.utils.Block_Ext
+    Extended blocks under
+    @kinda_raffy/procedural_city_generator.generator.structure.utils.Block_Ext
     See original by @martinohanlon/mcpi.block.Block
     BlockExt supports block sub-states.
     """
-    # TODO ~ Convert into DynamicEnum?
     AIR = 0
     SANDSTONE = 24
     RED_SANDSTONE = 179
