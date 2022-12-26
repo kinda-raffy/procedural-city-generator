@@ -1,10 +1,20 @@
-# FIXME ~ Narrow
 from __future__ import annotations
 from mcpi.vec3 import Vec3
-from typing import *
-from enum import *
-from abc import *
-from dataclasses import *
+
+from typing import (
+    TypedDict,
+    Optional,
+    Final,
+    Set,
+    Self,
+    NoReturn,
+    Tuple,
+)
+from enum import (
+    StrEnum,
+    unique,
+    auto,
+)
 
 __all__ = [
     'CellType',
@@ -62,7 +72,7 @@ class Cell:
         self.pos: Final = center_pos
         self._type: CellType = cell_type
         self._neighbours: NeighbouringCells = neighbours \
-            if neighbours else dict.fromkeys(NeighbouringCells)
+            if neighbours else dict.fromkeys(NeighbouringCells.__required_keys__)
         # Cells that coalesce to form a larger cell.
         self._merged_cells: Set[Cell] = set()
 
@@ -104,14 +114,15 @@ class Cell:
         return len(self._merged_cells)
 
     def __repr__(self):
-        return f"Cell({str(self.pos)}, {self._type}, {len(self)=})"
+        return f"Cell({str(self.pos)}, type: {self._type}, merged: {len(self)})"
 
     def __eq__(self, other):
-        return self.pos == other.pos
+        return False if other is None else self.pos == other.pos
 
     def __hash__(self):
+        assert self.pos is not None, f'{self!r} has no position'
         # Don't allow overlapping cells.
-        return hash(self.pos)  # Use default mcpi.vec3 hashing.
+        return hash((self.pos.x, self.pos.y, self.pos.z))
 
     @property
     def connected_cells(self) -> Set[Cell]:
