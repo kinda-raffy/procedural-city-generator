@@ -102,6 +102,12 @@ class VillageGridUnit:
             west_label,
         )
 
+    def _set_test_block(self) -> None:
+        x, y, z = self.vector_position.x, self.vector_position.y, self.vector_position.z
+        # TODO: Encode block values and update to read from dictionary.
+        test_block_id = 1
+        server_connection.setBlocks(x, y, z, x, y, z, test_block_id)
+
 
 def _village_grid_unit_test() -> None:
     raise NotImplementedError()
