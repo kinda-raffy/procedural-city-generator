@@ -76,7 +76,7 @@ class Cell:
         # Cells that coalesce to form a larger cell.
         self._merged_cells: Set[Cell] = set()
 
-    def add_merged_cell(self, other: Self) -> NoReturn:
+    def add_merged_cell(self, other: Cell) -> NoReturn:
         assert other not in self._merged_cells, \
             f'{other!r} is already in connected_cells'
         assert any([other == neighbour for neighbour in self._neighbours.values()]), \
@@ -110,16 +110,16 @@ class Cell:
              if internal_direction not in self.faces_environment_direction()]
         )
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._merged_cells)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Cell({str(self.pos)}, type: {self._type}, merged: {len(self)})"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return False if other is None else self.pos == other.pos
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         assert self.pos is not None, f'{self!r} has no position'
         # Don't allow overlapping cells.
         return hash((self.pos.x, self.pos.y, self.pos.z))
