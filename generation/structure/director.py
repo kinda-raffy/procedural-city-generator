@@ -20,6 +20,8 @@ __all__ = [
     'DirectorFactory',
 ]
 
+from generation.structure.errors.structure import DirectorDoesNotExist
+
 
 class Director(Protocol):
     """Director Interface."""
@@ -31,7 +33,7 @@ class Director(Protocol):
 
 @final
 class ResidentialDirector:
-    def __init__(
+    def __init__(  # type: ignore
             self,
             builder: Type[ResidentialBuilder],
             biome: Biome,
@@ -96,6 +98,7 @@ class DirectorFactory:
                     entry=entry,
                     center=center
                 )
+        raise DirectorDoesNotExist(builder)
 
 
 def debug() -> NoReturn:
