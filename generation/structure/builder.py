@@ -1,4 +1,23 @@
 from __future__ import annotations
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
+from enum import Enum
+from typing import (
+    TypedDict,
+    Optional,
+    Tuple,
+    Final,
+    NoReturn,
+    List,
+    Self,
+    final,
+)
+
+import random
+import logging
+
 # Components.
 from generation.structure.components.frame import (
     Frame,
@@ -51,23 +70,6 @@ from mcpi.vec3 import Vec3
 from generation.biome import Biome
 from generation.structure.errors.structure import BuilderNotImplemented
 
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
-from enum import Enum
-from typing import (
-    TypedDict,
-    Optional,
-    Tuple,
-    Final,
-    NoReturn,
-    List,
-    Self,
-    final,
-)
-
-import random
 
 
 __all__ = [
@@ -80,6 +82,7 @@ __all__ = [
     'SkyscraperBuilder',
 ]
 
+logger = logging.getLogger('structure')
 
 class GlobalComponentsPreference(TypedDict):
     """
@@ -186,11 +189,15 @@ class Builder(metaclass=ABCMeta):
         self._materials = env.get_material_pack()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> NoReturn:
+    def __exit__(self, exc_type, exc_val, exc_tb) -> Optional[bool]:
         """
         Perform clean up, add external decorative
         items and logging.
         """
+        if exc_type is not None:
+            # If error occurs while building, reset the build area.
+            Environment.clear_block(self._size, ground=self._entrance.y)
+            return False  # Let the exception propagate.
         self._add_external_obj()
 
     @final
