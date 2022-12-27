@@ -1,34 +1,37 @@
 from __future__ import annotations
+
+from typing import (
+Optional,
+List,
+Annotated,
+Final,
+NoReturn,
+Callable,
+Iterator,
+Set,
+Deque,
+final,
+)
+from collections import deque
+from abc import (
+ABCMeta,
+abstractmethod,
+)
+from enum import (
+Enum,
+unique,
+auto,
+)
+import random
+import logging
+
 from cell import (
     Cell,
     CellType,
     NeighbouringCells,
 )
 from mcpi.vec3 import Vec3
-
-from typing import (
-    Optional,
-    List,
-    Annotated,
-    Final,
-    NoReturn,
-    Callable,
-    Iterator,
-    Set,
-    Deque,
-    final,
-)
-from collections import deque
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
-from enum import (
-    Enum,
-    unique,
-    auto,
-)
-import random
+from generation.structure.errors.structure import CellDoesNotExist
 
 __all__ = [
     'CellStorage',
@@ -43,7 +46,7 @@ __all__ = [
     'BlueprintFactory',
 ]
 
-from generation.structure.errors.structure import CellDoesNotExist
+logger = logging.getLogger('structure')
 
 CellStorage = List[List[List[Cell]]]
 CellStorageLevel = List[List[Cell]]
@@ -124,10 +127,12 @@ class Blueprint(metaclass=ABCMeta):
         self._create_graph()
         self._connect_graph()
         self._plan_structure()
+        logger.info(f'Blueprint generation complete at {self}.')
 
     def _create_graph(self) -> NoReturn:
         """Create a 3D graph with empty cells."""
         # Begin generation from the ground, south-west corner.
+        logger.info('Creating graph...')
         left_bound: Vec3 = self._structure_center - Vec3(
             self._dimensions.x // 2,
             self._dimensions.y // 2,
@@ -141,6 +146,7 @@ class Blueprint(metaclass=ABCMeta):
 
     def _connect_graph(self) -> NoReturn:
         # Connect all cells.
+        logger.info('Connecting graph...')
         for cell_index in self._seq_index_iter():
             neighbours: NeighbouringCells = NeighbouringCells(
                 NORTH=self._get_cell(cell_index + Vec3(1, 0, 0)),
@@ -373,6 +379,7 @@ class ResidentialBlueprint(Blueprint):
 
     def _create_structure_entry(self) -> NoReturn:
         # Register structure entrance on first level.
+        logger.debug('Creating structure entry.')
         entrance = self._structure_entrance
         first_level: CellStorageLevel = self._cells[0]
         cell = next(
@@ -386,6 +393,7 @@ class ResidentialBlueprint(Blueprint):
         self._entrances[0] = cell
 
     def _plan_ground_level(self) -> NoReturn:
+        logger.debug('Planning ground level.')
         assert self._entrances[0] is not None, 'Structure entry is not set.'
         # Plan the first level.
         structure_entrance: Cell = self._entrances[0]
@@ -395,6 +403,7 @@ class ResidentialBlueprint(Blueprint):
         )
 
     def _plan_higher_level(self, level_no: int) -> NoReturn:
+        logger.debug(f'Planning level {level_no}.')
         # Entrance to level is on previous level.
         level_entry: Cell = self._create_higher_level_entry(level_no)
         # Current floor.
@@ -413,6 +422,7 @@ class ResidentialBlueprint(Blueprint):
             self,
             level_no: int
     ) -> Annotated[Cell, 'Level entrance']:
+        logger.debug(f'Creating level {level_no} entry.')
         assert level_no <= self._permissible_levels, \
             f'{level_no} is higher then what is permitted: {self._permissible_levels}'
         assert level_no != 0, 'Level 0 is the structure entry.'
@@ -442,6 +452,9 @@ class ResidentialBlueprint(Blueprint):
                 [str, Cell], bool
             ] = lambda k, c: True
     ) -> NoReturn:
+        logger.debug(
+            f'Level traversal starting at {start_cell.pos} with conversion type {generative_type}.'
+        )
         for cell_count, cell in enumerate(
                 self.breadth_traversal(
                     start_cell,
@@ -455,6 +468,7 @@ class ResidentialBlueprint(Blueprint):
                 cell.type_ = generative_type
 
     def _merge_cells(self) -> NoReturn:
+        logger.debug('Merging cells.')
         assert None not in self._entrances, f'Entrance(s) missing.'
         # Create larger cells by merging smaller ones.
         for entry in self._entrances:
@@ -524,6 +538,7 @@ class BlueprintFactory:
                 Annotated[int, 'x > 2']
             ] = None
     ) -> Blueprint:
+        logger.debug(f'Creating blueprint of type {type_}.')
         return cls.__blueprint_types[type_](
             size,
             entrance,

@@ -170,6 +170,7 @@ class Builder(metaclass=ABCMeta):
                 spec[component] = random.choice(value)
         assert all([type_ is not None for type_ in spec.values()]), \
             'Component specification is invalid.'
+        logger.debug(f'Global component specification: {spec}')
         return spec
 
     def __enter__(self) -> Self:
@@ -177,6 +178,7 @@ class Builder(metaclass=ABCMeta):
         Perform required initialization before
         building and logging.
         """
+        logger.info(f'Building structure of type {self.__class__.__name__}')
         self._global_component_spec = self._evaluate_components(
             self.global_component_preference()
         )
@@ -196,9 +198,15 @@ class Builder(metaclass=ABCMeta):
         """
         if exc_type is not None:
             # If error occurs while building, reset the build area.
+            logger.error(f'Error occurred while building: {exc_val}')
+            logger.exception(exc_tb)
             Environment.clear_block(self._size, ground=self._entrance.y)
             return False  # Let the exception propagate.
         self._add_external_obj()
+        logger.info(f'Finished building structure {self}.')
+
+    def __repr__(self) -> str:
+        return f'<{self.__class__.__name__} at {self._structure_center}>'
 
     @final
     def __len__(self) -> int:
@@ -237,7 +245,7 @@ class HouseBuilder(ResidentialBuilder):
             'RoofType': None,
             'WindowType': (WindowType.DOUBLE_BAR, WindowType.HORIZONTAL_STRIP, WindowType.FULL),
             'PoolStructureType': None,
-        }  # No preferences.
+        }
 
     def _generate_blueprint(self) -> Blueprint:
         blueprint: Blueprint = BlueprintFactory().create(
@@ -251,6 +259,7 @@ class HouseBuilder(ResidentialBuilder):
         return blueprint
 
     def create_structure(self) -> NoReturn:
+        logger.debug('Creating structural frame.')
         for cell in self._blueprint:
             frame: Frame = DefaultFrame(
                 cell,
@@ -265,6 +274,7 @@ class HouseBuilder(ResidentialBuilder):
     def create_stairs(self) -> NoReturn:
         # Uses global stairs.
         stair_type: StairType = self._global_component_spec['StairType']
+        logger.debug(f'Placing stairs of type {stair_type}.')
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
                 _predicate=lambda k, c: c.type_ == CellType.LEVEL_ENTRY
@@ -279,6 +289,7 @@ class HouseBuilder(ResidentialBuilder):
             stair.set_above_stairs()
 
     def create_doors(self) -> NoReturn:
+        logger.debug('Placing doors.')
         for cell in self._blueprint:
             door: Door = DoorFactory().create(
                 cell.pos,
@@ -289,6 +300,7 @@ class HouseBuilder(ResidentialBuilder):
     def create_roof(self) -> NoReturn:
         # Uses global roof.
         roof_type: RoofType = self._global_component_spec['RoofType']
+        logger.debug(f'Placing roof of type {roof_type}.')
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
                 _predicate=lambda k, c: c.type_ != CellType.POOL
@@ -305,6 +317,7 @@ class HouseBuilder(ResidentialBuilder):
         # Uses global pool structure and roof.
         pool_struct_type: PoolStructureType = \
             self._global_component_spec['PoolStructureType']
+        logger.debug(f'Placing pool of type {pool_struct_type}.')
         roof_type: RoofType = self._global_component_spec['RoofType']
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
@@ -332,6 +345,7 @@ class HouseBuilder(ResidentialBuilder):
         window_type: WindowType = random.choice(
             [WindowType.DOUBLE_BAR, WindowType.HORIZONTAL_STRIP, WindowType.FULL]
         )
+        logger.debug(f'Placing windows of type {window_type}.')
         for cell in self._blueprint.breadth_traversal(
                 self._blueprint[self._entrance],
                 _predicate=lambda k, c: c.faces_environment()
@@ -348,6 +362,7 @@ class HouseBuilder(ResidentialBuilder):
                 window.place()
 
     def _add_external_obj(self) -> NoReturn:
+        logger.debug('Adding external objects.')
         self._add_family()
         self._add_flowers()
 

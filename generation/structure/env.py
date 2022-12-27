@@ -11,6 +11,7 @@ from typing import (
 from dataclasses import dataclass
 import random
 import tomllib
+import logging
 
 from mcpi.vec3 import Vec3
 from generation import connection as server_conn
@@ -29,6 +30,7 @@ __all__ = [
     "Environment",
 ]
 
+logger = logging.getLogger('structure')
 
 class MaterialPack(TypedDict):
     """Global material pack for structural generation."""
@@ -80,6 +82,7 @@ class Environment:
         structure_type: Final[str] = \
             self.builder.__name__.removesuffix('Builder').lower()
 
+        logger.debug(f'Loading materials for {biome} {structure_type}')
         with open(f'config/material_packs/{biome}.toml', 'rb') as file:
             config: Dict[str, Any] = tomllib.load(file)
         assert structure_type in config['meta']['supported_structures'], \
@@ -92,9 +95,10 @@ class Environment:
             if isinstance(v, str) else v
             for k, v in pack.items()
         }
-        # Add optional metadata for logging.
+        # Add optional metadata for debugging + logging.
         for k, v in loaded_pack.pop('_info').items():
             loaded_pack[f'_{k}_'] = v
+            logger.debug(f'Material pack meta: {v}')
         return loaded_pack
 
     @staticmethod
@@ -104,9 +108,10 @@ class Environment:
             ground: int,
             cell_floor: int = 2
     ) -> None:
+        logger.debug('Clearing block.')
         block_dimensions.y += cell_floor
         server_conn.setBlocks(
             block_dimensions + Vec3(0, ground, 0),
             block_dimensions,
             BlocEx['AIR'],
-            )
+        )

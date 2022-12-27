@@ -1,12 +1,4 @@
 from __future__ import annotations
-from builder import (
-    Builder,
-    ResidentialBuilder,
-    HouseBuilder
-)
-from generation.biome import Biome
-from mcpi.vec3 import Vec3
-
 from typing import (
     Protocol,
     NoReturn,
@@ -15,12 +7,24 @@ from typing import (
     final
 )
 
+import logging
+
+from builder import (
+    Builder,
+    ResidentialBuilder,
+    HouseBuilder
+)
+from mcpi.vec3 import Vec3
+from generation.biome import Biome
+from generation.structure.errors.structure import DirectorDoesNotExist
+
+
 __all__ = [
     'Director',
     'DirectorFactory',
 ]
 
-from generation.structure.errors.structure import DirectorDoesNotExist
+logger = logging.getLogger('structure')
 
 
 class Director(Protocol):
@@ -33,7 +37,7 @@ class Director(Protocol):
 
 @final
 class ResidentialDirector:
-    def __init__(  # type: ignore
+    def __init__(
             self,
             builder: Type[ResidentialBuilder],
             biome: Biome,
@@ -49,6 +53,7 @@ class ResidentialDirector:
         self._center: Final = center
 
     def build(self) -> NoReturn:
+        logger.info(f'{self.__class__.__name__} coordinating build process.')
         with self._builder(
             self._biome,
             build_dimensions=self._size,
@@ -91,6 +96,7 @@ class DirectorFactory:
         # under C3 linearization.
         for builder_ in [cls_.__name__ for cls_ in builder.__mro__]:
             if builder_ in cls.__builder_to_director_map:
+                logger.debug(f'Dispatching director to handle {builder_}.')
                 return cls.__builder_to_director_map[builder_](
                     builder,
                     biome,
@@ -101,7 +107,7 @@ class DirectorFactory:
         raise DirectorDoesNotExist(builder)
 
 
-def debug() -> NoReturn:
+def test() -> NoReturn:
     house: Director = DirectorFactory.register(
         HouseBuilder,
         Biome.GRASSY,
@@ -113,4 +119,4 @@ def debug() -> NoReturn:
 
 
 if __name__ == '__main__':
-    debug()
+    test()
