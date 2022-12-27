@@ -4,7 +4,7 @@ from mcpi.minecraft import Minecraft
 from mcpi.vec3 import Vec3
 import mcpi.block as block
 import random
-from generation.structure.reference.__legacy_house import House
+from generation.structure.legacy.__legacy_house import House
 
 mc = Minecraft.create()
 post = mc.postToChat

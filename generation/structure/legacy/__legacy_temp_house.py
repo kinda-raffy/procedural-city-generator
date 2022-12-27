@@ -3,7 +3,7 @@ from mcpi import block
 from mcpi.vec3 import Vec3
 import random
 from time import sleep
-from generation.structure.config.design import (
+from generation.structure.legacy.__legacy_design import (
     blocks,
     apartment_biome,
     sand_biome,
