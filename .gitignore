@@ -3,3 +3,4 @@ venv*/
 .idea/
 .vscode/
 generation/.logs/*
+*/__pycache__/*
