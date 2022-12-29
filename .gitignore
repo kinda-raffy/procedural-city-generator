@@ -4,3 +4,4 @@ venv*/
 .vscode/
 generation/.logs/*
 */__pycache__/*
+.mypy_cache/
