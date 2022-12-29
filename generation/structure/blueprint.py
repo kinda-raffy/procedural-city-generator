@@ -1,26 +1,26 @@
 from __future__ import annotations
 
 from typing import (
-Optional,
-List,
-Annotated,
-Final,
-NoReturn,
-Callable,
-Iterator,
-Set,
-Deque,
-final,
+    Optional,
+    List,
+    Annotated,
+    Final,
+    NoReturn,
+    Callable,
+    Iterator,
+    Set,
+    Deque,
+    final,
 )
 from collections import deque
 from abc import (
-ABCMeta,
-abstractmethod,
+    ABCMeta,
+    abstractmethod,
 )
 from enum import (
-Enum,
-unique,
-auto,
+    Enum,
+    unique,
+    auto,
 )
 import random
 import logging
