@@ -2,6 +2,8 @@
 Structure Overview
 ====================
 
+*2 min read*
+
 **Scenario**
 
 - The metropolis is a vast and complex entity comprising many structures distinguished by an array of architectural variations. From towering skyscrapers to picturesque parks, the cityscape is a testament to the diversity of human ingenuity.
