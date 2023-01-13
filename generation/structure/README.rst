@@ -1,17 +1,50 @@
-=========
-Building
-=========
+====================
+Structure Overview
+====================
 
-TODO
----------
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel rhoncus arcu. Nam accumsan eros vitae placerat auctor. Aenean sit amet faucibus purus. Nunc pulvinar rutrum dui, sed egestas lacus tempor sed. Proin a tempus nunc. Duis accumsan mattis sapien. Quisque at malesuada lorem. Cras elementum tempor imperdiet. Maecenas eget felis faucibus, faucibus lacus non, posuere metus. Morbi ac purus posuere, mattis neque sed, eleifend turpis. Nunc at tellus eu dolor tempor ullamcorper at a ligula. Nunc blandit viverra semper. Maecenas laoreet sem at ex convallis molestie. Aenean rhoncus eu diam sed tempus.
+**Scenario**
 
-Ut ullamcorper nunc quis ligula aliquet, eget pulvinar libero elementum. Mauris vulputate, risus vitae facilisis blandit, dolor ex auctor est, sollicitudin pharetra nunc leo nec dui. Integer interdum neque ut ex aliquet gravida. Praesent venenatis imperdiet semper. Proin porta vel risus vitae feugiat. Proin sed gravida odio. Vestibulum bibendum tempus volutpat. Mauris porta sollicitudin felis ac facilisis. Donec pharetra lacus mi, et maximus felis semper et.
+- The metropolis is a vast and complex entity comprising many structures distinguished by an array of architectural variations. From towering skyscrapers to picturesque parks, the cityscape is a testament to the diversity of human ingenuity.
+- In this context, the 'structure' submodule was devised with the purpose of centralising the creation of all types of urban structures, from recreational spaces to medical facilities and residential quarters.
 
-Nam tempus id leo vitae dictum. Aenean ac libero lacus. Suspendisse rhoncus ultricies sem, a dapibus mi porttitor dapibus. Suspendisse faucibus cursus nibh in ultrices. Cras rhoncus ut ligula ut elementum. Integer eu sem cursus, pulvinar augue ut, sollicitudin mi. Suspendisse sodales viverra mi, ut vehicula neque aliquet id. Maecenas malesuada luctus aliquam. Aliquam ut tincidunt arcu, sit amet rutrum felis. Curabitur tempor neque tortor, viverra viverra nibh molestie sed.
+**Challenge 1 ~ Structure Generation**
 
-Proin posuere volutpat turpis. Duis ex leo, rhoncus eget imperdiet ut, elementum ut eros. Vestibulum sit amet nunc quis elit fringilla finibus non et elit. Nunc maximus sit amet ligula in pulvinar. In vel ultrices massa. Maecenas pharetra molestie neque. Cras velit turpis, ornare ac magna a, pharetra vulputate arcu.
+- The uncoordinated generation of structures can lead to a chaotic codebase that is hard to maintain and extend, thereby hindering the ability to support new structures.
+- Thus, the task was to craft a centralised and robust generation engine that could produce a diverse set of structures that could accommodate the myriad types of urban edifices.
 
-Nunc ullamcorper luctus odio, vitae volutpat ante porttitor in. Donec lacinia metus finibus mauris ullamcorper iaculis. Nam iaculis ante nec ligula congue feugiat. Vivamus aliquet lorem vitae mi vulputate, sed auctor felis dictum. Mauris diam nunc, aliquam sed orci at, porta vulputate leo. Morbi laoreet condimentum lacus vel imperdiet. Phasellus imperdiet tortor porta ipsum feugiat dictum. Maecenas nibh magna, commodo quis ex sit amet, maximus luctus orci. Aenean iaculis risus quis aliquam ultricies. Proin eget turpis sagittis, sodales lacus vel, maximus leo. Vestibulum mollis auctor risus a sollicitudin. Vestibulum orci ligula, bibendum nec consequat a, faucibus eget nulla.
+**Solution 1 ~ 3D Graphs**
 
+.. image:: .github/assets/images/structure_generation.gif
+    :alt: A structure generation example.
+    :width: 700px
+    :align: center
 
+- To meet this challenge, we employed the use of 3D graphs, where cells, the smallest unit of buildable space, are interconnected to form a three-dimensional representation of the build area.
+- During the generation process, traversed cells are transformed into a generative type, and this traversal can be modified using a lambda predicate. This feature is vital in enabling the generator to function for a wide range of structures.
+- Examples of this implementation include:
+
+  - Traversing upwards to create a **spire for a skyscraper**
+  - Traversing in a column to create a **grand hallway in a library**
+  - Traversing on "level_access" cell types to create a **grand spiral staircase**
+  - Traversing only on a level above the ground level to create a **high-ceilinged hotel lobby**.
+
+**Challenge 2 ~ Modularity, Extensibility, and Reusability**
+
+- To ensure the submodule's flexibility, it was imperative to enable contributors to add their own custom structures to the codebase easily. However, despite their architectural variations, buildings share common properties such as walls, roofs, and doors.
+- Without a cohesive submodule framework, each addition would be plagued by convoluted access to internal APIs, an unorganised code structure, and unmaintainable code.
+
+**Solution 2 ~ Design Patterns**
+
+.. image:: .github/assets/images/structure_architecture.png
+    :alt: Submodule architecture.
+    :width: 100%
+    :align: center
+
+- To tackle this challenge, we made extensive use of various design patterns. A slightly modified builder structural pattern was utilised to register custom structures.
+- This pattern comprises of a director which coordinates the build order and process using a builder. The builder defines customised component methods respective to the structure being built, and these components, such as doors, windows, and walls, are then used to build the structure.
+- This framework allowed the heavy reuse of components. For example, a library and a skyscraper can call the same underlying wall component.
+- Likewise, builders may reuse the same director type. For example, a townhouse and an apartment building may reuse the overlying residential director.
+- Additionally, protocol and abstract classes were employed to enforce maintainability and extensibility, and where necessary, directors, builders, and components were abstracted away behind abstract factories, factories, and facades.
+- This framework allowed us to simplify object creation while enhancing extensibility greatly. More importantly, focusing on code reusability allowed for a concise and readable codebase.
+
+Many other nuances to the submodule have been omitted in this overview, such as the optimisation of computation by drawing traversed cells only when required. However, if you want to contact me ~ contact(atsign)kindaraffy.xyz :).
