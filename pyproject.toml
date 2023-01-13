@@ -1,0 +1,11 @@
+# Global Mypy
+[tool.mypy]
+platform = [
+    "darwin", "linux"
+]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+exclude = '^__legacy$'  # Exclude files starting with __legacy*
+pretty = true           # Error formatting.

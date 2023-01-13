@@ -4,7 +4,7 @@ from mcpi.vec3 import Vec3
 import mcpi.block as block
 from typing import TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 mc = Minecraft.create()
 post = mc.postToChat
@@ -21,7 +21,7 @@ class Grid:
     - Dynamically generates and maintains a weighted graph of connected tile objects that respects terrain.
     - Clears trees if necessary to allow for the placement of structures.
     - Implements methods to determine the shortest path from one tile to another, accounting for edge weights.
-    
+
     """
 
     def __init__(self, max_size):
@@ -41,13 +41,9 @@ class Grid:
             self.resolve_trees()
         self.connect()
         # Remove disconnected areas of matrix.
-        self.adjacency_list = self.cull(
-            self.connected_area()
-        )
+        self.adjacency_list = self.cull(self.connected_area())
         self.explore()
-        self.adjacency_list = self.cull(
-            self.connected_area()
-        )
+        self.adjacency_list = self.cull(self.connected_area())
         self.center = self.find_center()
 
     def __iter__(self):
@@ -58,24 +54,20 @@ class Grid:
         return len(self.adjacency_list)
 
     def build(self):
-        post(f'Generating matrix. Dimension {self.dimension}.')
+        post(f"Generating matrix. Dimension {self.dimension}.")
         for i in range(self.dimension):
-            x = self.start.x \
-                + (i - self.dimension / 2) \
-                * self.stride
+            x = self.start.__x + (i - self.dimension / 2) * self.stride
             for j in range(self.dimension):
-                z = self.start.z \
-                    + (j - self.dimension / 2) \
-                    * self.stride
+                z = self.start.z + (j - self.dimension / 2) * self.stride
                 y = get_height(x, z)
                 vector = Vec3(x, y, z)
                 self.add_tile(Tile(vector, (i, j)))
-            percentage = (i * self.dimension) / (self.dimension ** 2) * 100
-            post(f'{percentage:.0f}%')
-        post('Matrix complete.')
+            percentage = (i * self.dimension) / (self.dimension**2) * 100
+            post(f"{percentage:.0f}%")
+        post("Matrix complete.")
 
     def connect(self):
-        post('Connecting matrix.')
+        post("Connecting matrix.")
         for tile in self:
             coordinate = tile.coordinate
             if coordinate[0] < self.dimension - 1:
@@ -84,10 +76,10 @@ class Grid:
             if coordinate[1] < self.dimension - 1:
                 second = (coordinate[0], coordinate[1] + 1)
                 self.add_edge(tile, self.find_tile(coordinate=second))
-        post('Matrix connected.')
+        post("Matrix connected.")
 
     def explore(self):
-        post('Building organic grid.')
+        post("Building organic grid.")
         stride = self.stride
         maximum = self.max_size
         # minimum = 100
@@ -97,9 +89,9 @@ class Grid:
         indices = {0, self.dimension - 1}
         frontier = [
             # All tiles on the edges of the matrix.
-            x for x in self
-            if x.coordinate[0] in indices
-            or x.coordinate[1] in indices
+            x
+            for x in self
+            if x.coordinate[0] in indices or x.coordinate[1] in indices
         ]
         while frontier and len(network) <= maximum:
             current = frontier.pop(0)
@@ -115,64 +107,40 @@ class Grid:
                 if tiles[0] is False:
                     vector = Vec3(
                         current.position.x - stride,
-                        get_height(
-                            current.position.x - stride,
-                            current.position.z
-                        ),
-                        current.position.z
+                        get_height(current.position.x - stride, current.position.z),
+                        current.position.z,
                     )
-                    north = Tile(
-                        vector,
-                        (x - 1, z)
-                    )
+                    north = Tile(vector, (x - 1, z))
                     self.resolve_trees(tile=north) if self.forest else None
                     self._explore(current, north, frontier)
                 # East
                 if tiles[1] is False:
                     vector = Vec3(
                         current.position.x,
-                        get_height(
-                            current.position.x,
-                            current.position.z + stride
-                        ),
-                        current.position.z + stride
+                        get_height(current.position.x, current.position.z + stride),
+                        current.position.z + stride,
                     )
-                    east = Tile(
-                        vector,
-                        (x, z + 1)
-                    )
+                    east = Tile(vector, (x, z + 1))
                     self.resolve_trees(tile=east) if self.forest else None
                     self._explore(current, east, frontier)
                 # South
                 if tiles[2] is False:
                     vector = Vec3(
                         current.position.x + stride,
-                        get_height(
-                            current.position.x + stride,
-                            current.position.z
-                        ),
-                        current.position.z
+                        get_height(current.position.x + stride, current.position.z),
+                        current.position.z,
                     )
-                    south = Tile(
-                        vector,
-                        (x + 1, z)
-                    )
+                    south = Tile(vector, (x + 1, z))
                     self.resolve_trees(tile=south) if self.forest else None
                     self._explore(current, south, frontier)
                 # West
                 if tiles[3] is False:
                     vector = Vec3(
                         current.position.x,
-                        get_height(
-                            current.position.x,
-                            current.position.z - stride
-                        ),
-                        current.position.z - stride
+                        get_height(current.position.x, current.position.z - stride),
+                        current.position.z - stride,
                     )
-                    west = Tile(
-                        vector,
-                        (x, z - 1)
-                    )
+                    west = Tile(vector, (x, z - 1))
                     self.resolve_trees(tile=west) if self.forest else None
                     self._explore(current, west, frontier)
             # Print percentage.
@@ -180,7 +148,7 @@ class Grid:
                 post(f"{percent // (maximum // 100)}%")
         for tile in self:
             self._connect(tile)
-        post('Organic grid complete.')
+        post("Organic grid complete.")
         return network
 
     def _explore(self, current, adjacent, frontier):
@@ -219,7 +187,7 @@ class Grid:
         total = 0
         cutoff = int(len(self) * threshold)
         for tile in self:
-            if tile.terrain == Biome.TREE:
+            if tile.terrain == Biome.JUNGLE:
                 total += 1
             if total >= cutoff:
                 return True
@@ -227,35 +195,53 @@ class Grid:
 
     def resolve_trees(self, tile=None):
         if tile is None:
-            trees = [x for x in self if x.terrain == Biome.TREE]
+            trees = [x for x in self if x.terrain == Biome.JUNGLE]
         else:
             trees = [tile]
-            if tile.terrain != Biome.TREE:
+            if tile.terrain != Biome.JUNGLE:
                 return
         for tile in trees:
-            x = tile.position.x
+            x = tile.position.__x
             z = tile.position.z
             while True:
-                if get_block(x, tile.position.y, z) in {
-                    1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13,
-                    14, 15, 16, 24, 49, 82,
+                if get_block(x, tile.position.__y, z) in {
+                    1,
+                    2,
+                    3,
+                    4,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    24,
+                    49,
+                    82,
                 }:
                     set_blocks(
-                        x - 1, tile.position.y + 1, z - 1,
-                        x + 2, tile.position.y + 20, z + 2,
-                        block.AIR.id
+                        x - 1,
+                        tile.position.__y + 1,
+                        z - 1,
+                        x + 2,
+                        tile.position.__y + 20,
+                        z + 2,
+                        block.AIR.id,
                     )
                     tile.terrain = tile.find_terrain()
                     break
-                tile.position.y -= 1
+                tile.position.__y -= 1
 
     def find_tile(self, coordinate=None, vector=None):
         if isinstance(vector, Vec3):
             for tile in self:
                 if tile.position == vector:
                     return tile
-        elif isinstance(coordinate, tuple) \
-                and len(coordinate) == 2:
+        elif isinstance(coordinate, tuple) and len(coordinate) == 2:
             for tile in self:
                 if tile.coordinate == coordinate:
                     return tile
@@ -264,23 +250,23 @@ class Grid:
     def add_tile(self, tile):
         try:
             if not isinstance(tile, Tile):
-                raise TypeError('Only tiles can be added to grid.')
+                raise TypeError("Only tiles can be added to grid.")
             self.adjacency_list[tile] = list()
         except TypeError as error:
             post(error)
 
     def add_edge(self, tile_a, tile_b):
         # If edge already exists, return false.
-        if (tile_a, tile_b) in self.edge_weights or \
-                (tile_b, tile_a) in self.edge_weights:
+        if (tile_a, tile_b) in self.edge_weights or (
+            tile_b,
+            tile_a,
+        ) in self.edge_weights:
             return False
         weight = self.calculate_weight(tile_a, tile_b)
         # If weight invalid, return false.
         if weight is None:
             return False
-        for x, y in {
-            (tile_a, tile_b), (tile_b, tile_a)
-        }:
+        for x, y in {(tile_a, tile_b), (tile_b, tile_a)}:
             try:
                 self.adjacency_list[x].append(y)
                 self.edge_weights[(x, y)] = weight
@@ -290,24 +276,21 @@ class Grid:
         return True
 
     def calculate_weight(self, tile_a, tile_b):
-        prohibited = {Biome.LAVA, Biome.TREE}
-        if (tile_a.terrain in prohibited) or \
-                (tile_b.terrain in prohibited):
+        prohibited = {Biome.LAVA, Biome.JUNGLE}
+        if (tile_a.terrain in prohibited) or (tile_b.terrain in prohibited):
             return None
-        difference = abs(tile_a.position.y -
-                         tile_b.position.y)
+        difference = abs(tile_a.position.__y - tile_b.position.__y)
         if difference > self.tolerance:
             return None
 
         weight = difference + 2
-        if tile_a.terrain == Biome.WATER or \
-                tile_b.terrain == Biome.WATER:
+        if tile_a.terrain == Biome.WATER or tile_b.terrain == Biome.WATER:
             weight += 8
 
         return weight
 
     def connected_area(self):
-        post('Finding largest connected area.')
+        post("Finding largest connected area.")
         discovered = set()
         largest = list()
         for tile in self:
@@ -331,13 +314,8 @@ class Grid:
         return largest
 
     def find_center(self):
-        post('Finding center.')
-        available = list(
-            filter(
-                self.is_3x3,
-                self.adjacency_list.keys()
-            )
-        )
+        post("Finding center.")
+        available = list(filter(self.is_3x3, self.adjacency_list.keys()))
         min_x = max_x = available[0].coordinate[0]
         min_z = max_z = available[0].coordinate[1]
         for current in available:
@@ -360,13 +338,9 @@ class Grid:
             cord = current_tile.coordinate
             if closest_tile is None:
                 closest_tile = current_tile
-                closest_dist = \
-                    abs(cord[0] - midpoint[0]) + \
-                    abs(cord[1] - midpoint[1])
+                closest_dist = abs(cord[0] - midpoint[0]) + abs(cord[1] - midpoint[1])
             else:
-                current_dist = \
-                    abs(cord[0] - midpoint[0]) + \
-                    abs(cord[1] - midpoint[1])
+                current_dist = abs(cord[0] - midpoint[0]) + abs(cord[1] - midpoint[1])
                 if current_dist < closest_dist:
                     closest_tile = current_tile
                     closest_dist = current_dist
@@ -374,15 +348,19 @@ class Grid:
 
     def show_edges(self, tile):
         for neighbour in self.adjacency_list[tile]:
-            if neighbour.position.x > tile.position.x:
+            if neighbour.position.__x > tile.position.__x:
                 mc.setBlock(
-                    tile.position.x + 2, tile.position.y,
-                    tile.position.z, block.STONE.id
+                    tile.position.__x + 2,
+                    tile.position.__y,
+                    tile.position.z,
+                    block.STONE.id,
                 )
             if neighbour.position.z > tile.position.z:
                 mc.setBlock(
-                    tile.position.x, tile.position.y,
-                    tile.position.z + 2, block.STONE.id
+                    tile.position.__x,
+                    tile.position.__y,
+                    tile.position.z + 2,
+                    block.STONE.id,
                 )
 
     def is_3x3(self, point, threshold=7):
@@ -398,10 +376,7 @@ class Grid:
         }:
             for neighbour in self.adjacency_list[point]:
                 if coordinate in list(
-                    map(
-                        lambda tile: tile.coordinate,
-                        self.adjacency_list[neighbour]
-                    )
+                    map(lambda tile: tile.coordinate, self.adjacency_list[neighbour])
                 ):
                     count += 1
         return True if count > threshold else False
@@ -412,8 +387,7 @@ class Grid:
             for j in range(-size // 2 + 1, size // 2 + 1):
                 tiles.add(
                     self.find_tile(
-                        coordinate=(point.coordinate[0] + i,
-                                    point.coordinate[1] + j)
+                        coordinate=(point.coordinate[0] + i, point.coordinate[1] + j)
                     )
                 )
         tiles = tiles.difference({None})
@@ -490,7 +464,7 @@ class Tile:
         self.position = position
         self.coordinate = coordinate
         self.predecessor = None
-        self.distance = float('inf')
+        self.distance = float("inf")
         self.terrain = self.find_terrain()
 
     @property
@@ -500,7 +474,7 @@ class Tile:
     @position.setter
     def position(self, position):
         if not isinstance(position, Vec3):
-            raise TypeError('Position must be a vector.')
+            raise TypeError("Position must be a vector.")
         self._position = position
 
     @property
@@ -509,9 +483,8 @@ class Tile:
 
     @coordinate.setter
     def coordinate(self, coordinate):
-        if not isinstance(coordinate, tuple) or \
-                len(coordinate) != 2:
-            raise TypeError('Coordinate must be a tuple with two elements.')
+        if not isinstance(coordinate, tuple) or len(coordinate) != 2:
+            raise TypeError("Coordinate must be a tuple with two elements.")
         self._coordinate = coordinate
 
     def find_terrain(self):
@@ -525,16 +498,16 @@ class Tile:
         elif under in {10, 11}:
             return Biome.LAVA
         elif under in {18, 81, 83, 39, 40, 17, 261, 579, 580}:
-            return Biome.TREE
+            return Biome.JUNGLE
         elif under in {12, 24}:
-            return Biome.SAND
+            return Biome.DESSERT
         else:
-            return Biome.GROUND
+            return Biome.GRASSY
 
 
 def main():
     pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

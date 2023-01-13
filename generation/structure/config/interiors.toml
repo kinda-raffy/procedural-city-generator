@@ -1,0 +1,755 @@
+# Block enums may be found under utils/block_extension.py
+[meta]
+config_type = 'interior_furnishing'
+supported_size = ['small', 'medium', 'large']   # Each entry must scale to the corresponding element.
+author = "kinda_raffy"
+package = "structure"
+
+[[interior]]
+    [interior._info]
+        name = "Enchantment"
+        variation = 1
+        description = "An enchanting table with bookshelves"
+        destructive = false
+    # True center.
+    true_center_floor = 'enchantment_table'
+    true_center = 'air'
+    true_center_ceil = 'glowstone'
+    # Ceiling center.
+    center_ceil_front = 'bookshelf'
+    center_ceil_back = 'bookshelf'
+    center_ceil_left = 'bookshelf'
+    center_ceil_right = 'bookshelf'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'chest'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    [interior._info]
+        name = "Enchantment"
+        variation = 2
+        description = "An enchanting table with bookshelves"
+        destructive = false
+    # True center.
+    true_center_floor = 'enchantment_table'
+    true_center = 'air'
+    true_center_ceil = 'diamond'
+    # Ceiling center.
+    center_ceil_front = 'glowstone'
+    center_ceil_back = 'glowstone'
+    center_ceil_left = 'glowstone'
+    center_ceil_right = 'glowstone'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor center.
+    center_floor_front = 'birch_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    [interior._info]
+        name = "Enchantment"
+        variation = 3
+        description = "An enchanting table with bookshelves"
+        destructive = false
+    # True center.
+    true_center_floor = 'enchantment_table'
+    true_center = 'air'
+    true_center_ceil = 'glowstone'
+    # Ceiling center.
+    center_ceil_front = 'gold'
+    center_ceil_back = 'gold'
+    center_ceil_left = 'gold'
+    center_ceil_right = 'gold'
+    # Ceiling corner.
+    corner_ceil_front_right = 'birch_fence'
+    corner_ceil_front_left = 'birch_fence'
+    corner_ceil_back_right = 'birch_fence'
+    corner_ceil_back_left = 'birch_fence'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Blacksmith", variation = 1, description = "A metal working shop", destructive = false}
+    # True center.
+    true_center_floor = 'anvil'
+    true_center = 'air'
+    true_center_ceil = 'redstone_lamp'
+    # Ceiling center.
+    center_ceil_front = 'torch_away'
+    center_ceil_back = 'torch_towards'
+    center_ceil_left = 'torch_left'
+    center_ceil_right = 'torch_right'
+    # Floor center.
+    center_floor_front = 'cauldron'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling Corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'furnace_left'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'furnace_left'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'cauldron'
+
+[[interior]]
+    _info = {name = "Blacksmith", variation = 2, description = "A metal working shop", destructive = false}
+    # True center.
+    true_center_floor = 'air'
+    true_center = 'air'
+    true_center_ceil = 'crafting_table'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling center.
+    center_ceil_front = 'torch_away'
+    center_ceil_back = 'torch_towards'
+    center_ceil_left = 'torch_left'
+    center_ceil_right = 'torch_right'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'furnace_left'
+    corner_floor_front_left = 'cauldron'
+    corner_floor_back_right = 'chest'
+    corner_floor_back_left = 'anvil'
+
+[[interior]]
+    _info = {name = "Comms Room", variation = 1, description = "A beacon room", destructive = false}
+    # True center.
+    true_center_floor = 'birch_plank'
+    true_center = 'beacon'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'dark_fence'
+    center_ceil_back = 'dark_fence'
+    center_ceil_left = 'dark_fence'
+    center_ceil_right = 'dark_fence'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'dark_fence'
+    corner_ceil_front_left = 'dark_fence'
+    corner_ceil_back_right = 'dark_fence'
+    corner_ceil_back_left = 'dark_fence'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Map Room", variation = 1, description = "A room with a massive globe", destructive = false}
+    # True center.
+    true_center_floor = 'birch_slab'
+    true_center = 'white_terracotta'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'acacia_fence'
+    center_ceil_back = 'acacia_fence'
+    center_ceil_left = 'acacia_fence'
+    center_ceil_right = 'acacia_fence'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'glowstone'
+    corner_ceil_front_left = 'acacia_fence'
+    corner_ceil_back_right = 'acacia_fence'
+    corner_ceil_back_left = 'acacia_fence'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "War Room", variation = 1, description = "A room with a command block", destructive = false}
+    # True center.
+    true_center_floor = 'command_block'
+    true_center = 'air'
+    true_center_ceil = 'glowstone'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'birch_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'birch_stairs_right'
+    # Ceiling corner.
+    corner_ceil_front_right = 'chest'
+    corner_ceil_front_left = 'chest'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'acacia_stairs'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Structural", variation = 1, description = "A small structural pillar", destructive = false}
+    # True center.
+    true_center_floor = 'dark_plank'
+    true_center = 'dark_fence'
+    true_center_ceil = 'dark_fence'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'dark_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'redstone_lamp'
+    corner_ceil_front_left = 'redstone_lamp'
+    corner_ceil_back_right = 'redstone_lamp'
+    corner_ceil_back_left = 'redstone_lamp'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Structural", variation = 2, description = "A small structural pillar", destructive = false}
+    # True center.
+    true_center_floor = 'gold'
+    true_center = 'birch_fence'
+    true_center_ceil = 'birch_fence'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'dark_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'glowstone'
+    corner_ceil_back_left = 'glowstone'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Armory", variation = 1, description = "A room with a lot of weapons", destructive = false}
+    # True center.
+    true_center_floor = 'iron_pressure_plate'
+    true_center = 'air'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'tnt'
+    center_ceil_back = 'tnt'
+    center_ceil_left = 'tnt'
+    center_ceil_right = 'chest'
+    # Floor center.
+    center_floor_front = 'tnt'
+    center_floor_back = 'tnt'
+    center_floor_left = 'tnt'
+    center_floor_right = 'chest'
+    # Ceiling corner.
+    corner_ceil_front_right = 'chest'
+    corner_ceil_front_left = 'tnt'
+    corner_ceil_back_right = 'chest'
+    corner_ceil_back_left = 'tnt'
+    # Floor corner.
+    corner_floor_front_right = 'standing_banner'
+    corner_floor_front_left = 'standing_banner'
+    corner_floor_back_right = 'tnt'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    [interior._info]
+        name = "Haunted"
+        variation = 1
+        description = "A haunted room with a monster spawner"
+        destructive = false
+    # True center.
+    true_center_floor = 'monster_spawner'
+    true_center = 'cobblestone_slab'
+    true_center_ceil = 'jack_o_lantern'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'cobweb'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'dead_shrub'
+    center_floor_back = 'cobweb'
+    center_floor_left = 'air'
+    center_floor_right = 'cobweb'
+    # Ceiling corner.
+    corner_ceil_front_right = 'cobweb'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'cobweb'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'dead_shrub'
+    corner_floor_back_left = 'dead_shrub'
+
+[[interior]]
+    _info = {name = "Library", variation = 1, description = "A big room with a lot of books", destructive = false}
+    # True center.
+    true_center_floor = 'bookshelf'
+    true_center = 'bookshelf'
+    true_center_ceil = 'spruce_fence'
+    # Ceiling center.
+    center_ceil_front = 'bookshelf'
+    center_ceil_back = 'bookshelf'
+    center_ceil_left = 'bookshelf'
+    center_ceil_right = 'bookshelf'
+    # Floor center.
+    center_floor_front = 'birch_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'glowstone'
+    corner_ceil_back_left = 'glowstone'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Library", variation = 2, description = "A small room with books", destructive = false}
+    # True center.
+    true_center_floor = 'bookshelf'
+    true_center = 'bookshelf'
+    true_center_ceil = 'bookshelf'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'birch_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'glowstone'
+    corner_ceil_back_left = 'glowstone'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Hydrualic Tunneler", variation = 1, description = "Working redstone piston to bore", destructive = false}
+    # True center.
+    true_center_floor = 'air'
+    true_center = 'sticky_piston'
+    true_center_ceil = 'lever'
+    # Ceiling center.
+    center_ceil_front = 'redstone_lamp'
+    center_ceil_back = 'air'
+    center_ceil_left = 'redstone_lamp'
+    center_ceil_right = 'redstone_lamp'
+    # Floor center.
+    center_floor_front = 'observer'
+    center_floor_back = 'command_block'
+    center_floor_left = 'wood_pressure_plate'
+    center_floor_right = 'wood_pressure_plate'
+    # Ceiling corner.
+    corner_ceil_front_right = 'redstone_lamp'
+    corner_ceil_front_left = 'redstone_lamp'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'wood_pressure_plate'
+    corner_floor_front_left = 'wood_pressure_plate'
+    corner_floor_back_right = 'wood_pressure_plate'
+    corner_floor_back_left = 'wood_pressure_plate'
+
+[[interior]]
+    _info = {name = "Family", variation = 1, description = "Indo-styled couches", destructive = false}
+    # True center.
+    true_center_floor = 'acacia_plank'
+    true_center = 'torch_standing'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'dark_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'dark_stairs'
+    corner_floor_front_left = 'dark_stairs'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Family", variation = 2, description = "Euro-styled couches", destructive = false}
+    # True center.
+    true_center_floor = 'oak_plank'
+    true_center = 'flower_pot'
+    true_center_ceil = 'dark_fence'
+    # Ceiling center.
+    center_ceil_front = 'glowstone'
+    center_ceil_back = 'glowstone'
+    center_ceil_left = 'glowstone'
+    center_ceil_right = 'glowstone'
+    # Floor center.
+    center_floor_front = 'birch_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'birch_stairs'
+    corner_floor_front_left = 'birch_stairs'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    [interior._info]
+        name = "Family"
+        variation = 3
+        description = "Japanese-styled couches (little floor mats!)"
+        destructive = false
+    # True center.
+    true_center_floor = 'oak_slab'
+    true_center = 'air'
+    true_center_ceil = 'birch_fence'
+    # Ceiling center.
+    center_ceil_front = 'birch_fence'
+    center_ceil_back = 'birch_fence'
+    center_ceil_left = 'birch_fence'
+    center_ceil_right = 'birch_fence'
+    # Floor center.
+    center_floor_front = 'birch_stairs_right'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'birch_stairs_right'
+    # Ceiling corner.
+    corner_ceil_front_right = 'birch_fence'
+    corner_ceil_front_left = 'birch_fence'
+    corner_ceil_back_right = 'glowstone'
+    corner_ceil_back_left = 'glowstone'
+    # Floor corner.
+    corner_floor_front_right = 'wood_pressure_plate'
+    corner_floor_front_left = 'wood_pressure_plate'
+    corner_floor_back_right = 'wood_pressure_plate'
+    corner_floor_back_left = 'wood_pressure_plate'
+
+[[interior]]
+    _info = {name = "Laboratory", variation = 1, description = "A botany lab", destructive = false}
+    # True center.
+    true_center_floor = 'white'
+    true_center = 'brewing_stand'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'chest'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'chest'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'chest'
+    corner_ceil_back_left = 'glowstone'
+    # Floor corner.
+    corner_floor_front_right = 'flower_pot'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'flower_pot'
+
+[[interior]]
+    _info = {name = "Laboratory", variation = 2, description = "An exploding chemistry lab", destructive = true}
+    # True center.
+    true_center_floor = 'tnt'
+    true_center = 'brewing_stand'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'tnt'
+    center_ceil_back = 'tnt'
+    center_ceil_left = 'tnt'
+    center_ceil_right = 'tnt'
+    # Floor center.
+    center_floor_front = 'fire'
+    center_floor_back = 'fire'
+    center_floor_left = 'fire'
+    center_floor_right = 'fire'
+    # Ceiling corner.
+    corner_ceil_front_right = 'tnt'
+    corner_ceil_front_left = 'tnt'
+    corner_ceil_back_right = 'tnt'
+    corner_ceil_back_left = 'glowstone'
+    # Floor corner.
+    corner_floor_front_right = 'fire'
+    corner_floor_front_left = 'fire'
+    corner_floor_back_right = 'fire'
+    corner_floor_back_left = 'fire'
+
+[[interior]]
+    _info = {name = "Laboratory", variation = 3, description = "Pickle Rick's lab", destructive = false}
+    # True center.
+    true_center_floor = 'white'
+    true_center = 'flower_pot'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'end_portal_frame'
+    center_floor_back = 'end_portal_frame'
+    center_floor_left = 'end_portal_frame'
+    center_floor_right = 'end_portal_frame'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'bookshelf'
+    corner_ceil_back_right = 'glowstone'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'end_portal_frame'
+    corner_floor_front_left = 'end_portal_frame'
+    corner_floor_back_right = 'end_portal_frame'
+    corner_floor_back_left = 'end_portal_frame'
+
+[[interior]]
+    _info = {name = "Kitchen", variation = 1, description = "A room with a sink", destructive = false}
+    # True center.
+    true_center_floor = 'red_carpet'
+    true_center = 'air'
+    true_center_ceil = 'air'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'chest'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'chest'
+    # Ceiling corner.
+    corner_ceil_front_right = 'glowstone'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'chest'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'cauldron'
+    corner_floor_back_left = 'birch_plank'
+
+[[interior]]
+    _info = {name = "Kitchen", variation = 2, description = "Spawns a kitchen fire", destructive = true}
+    # True center.
+    true_center_floor = 'red_carpet'
+    true_center = 'air'
+    true_center_ceil = 'glowstone'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'chest'
+    # Floor center.
+    center_floor_front = 'fire'
+    center_floor_back = 'fire'
+    center_floor_left = 'fire'
+    center_floor_right = 'chest'
+    # Ceiling corner.
+    corner_ceil_front_right = 'chest'
+    corner_ceil_front_left = 'fire'
+    corner_ceil_back_right = 'chest'
+    corner_ceil_back_left = 'fire'
+    # Floor corner.
+    corner_floor_front_right = 'fire'
+    corner_floor_front_left = 'fire'
+    corner_floor_back_right = 'cauldron'
+    corner_floor_back_left = 'birch_plank'
+
+[[interior]]
+    _info = {name = "Melon Structural", variation = 1, description = "A structural melon pillar", destructive = false}
+    # True center.
+    true_center_floor = 'melon'
+    true_center = 'dark_fence'
+    true_center_ceil = 'dark_fence'
+    # Ceiling center.
+    center_ceil_front = 'melon'
+    center_ceil_back = 'melon'
+    center_ceil_left = 'melon'
+    center_ceil_right = 'melon'
+    # Floor center.
+    center_floor_front = 'melon'
+    center_floor_back = 'melon'
+    center_floor_left = 'air'
+    center_floor_right = 'dark_stairs_right'
+    # Ceiling corner.
+    corner_ceil_front_right = 'glowstone'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'glowstone'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Cake Room", variation = 1, description = "STAMPYLONGHEAD!!!", destructive = false}
+    # True center.
+    true_center_floor = 'red'
+    true_center = 'cake'
+    true_center_ceil = 'torch_standing'
+    # Ceiling center.
+    center_ceil_front = 'air'
+    center_ceil_back = 'air'
+    center_ceil_left = 'air'
+    center_ceil_right = 'air'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'air'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Music Room", variation = 1, description = "A room with a jukebox", destructive = false}
+    # True center.
+    true_center_floor = 'jukebox'
+    true_center = 'air'
+    true_center_ceil = 'glowstone'
+    # Ceiling center.
+    center_ceil_front = 'redstone_lamp'
+    center_ceil_back = 'redstone_lamp'
+    center_ceil_left = 'redstone_lamp'
+    center_ceil_right = 'redstone_lamp'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'chest'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'
+
+[[interior]]
+    _info = {name = "Music Room", variation = 2, description = "A room with a jukebox and a chest", destructive = false}
+    # True center.
+    true_center_floor = 'note_block'
+    true_center = 'air'
+    true_center_ceil = 'glowstone'
+    # Ceiling center.
+    center_ceil_front = 'redstone_lamp'
+    center_ceil_back = 'redstone_lamp'
+    center_ceil_left = 'redstone_lamp'
+    center_ceil_right = 'redstone_lamp'
+    # Floor center.
+    center_floor_front = 'air'
+    center_floor_back = 'air'
+    center_floor_left = 'air'
+    center_floor_right = 'air'
+    # Ceiling corner.
+    corner_ceil_front_right = 'air'
+    corner_ceil_front_left = 'air'
+    corner_ceil_back_right = 'air'
+    corner_ceil_back_left = 'air'
+    # Floor corner.
+    corner_floor_front_right = 'chest'
+    corner_floor_front_left = 'air'
+    corner_floor_back_right = 'air'
+    corner_floor_back_left = 'air'

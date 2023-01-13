@@ -1,8 +1,20 @@
-from enum import Enum
+from enum import (
+    Enum,
+    verify,
+    global_enum,
+    CONTINUOUS,
+    unique,
+)
 
+__all__ = ['Biome']
+
+
+@unique
+@global_enum
+@verify(CONTINUOUS)
 class Biome(Enum):
-    GROUND = 1
-    SAND = 2
+    GRASSY = 1
+    DESSERT = 2
     WATER = 3
     LAVA = 4
-    TREE = 5
+    JUNGLE = 5
