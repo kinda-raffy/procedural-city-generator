@@ -14,7 +14,7 @@ Structure Overview
 
 **Solution 1 ~ 3D Graphs**
 
-.. image:: .github/assets/images/structure_generation.gif
+.. image:: ../../.github/assets/images/structure_generation.gif
     :alt: A structure generation example.
     :width: 700px
     :align: center
@@ -35,7 +35,7 @@ Structure Overview
 
 **Solution 2 ~ Design Patterns**
 
-.. image:: .github/assets/images/structure_architecture.png
+.. image:: ../../.github/assets/images/structure_architecture.png
     :alt: Submodule architecture.
     :width: 100%
     :align: center
