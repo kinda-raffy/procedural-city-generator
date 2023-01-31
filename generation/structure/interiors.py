@@ -6,16 +6,10 @@ from typing import (
     NotRequired,
     TypedDict,
 )
-from dataclasses import (
-    dataclass,
-    field
-)
+from dataclasses import dataclass, field
 import tomllib
 
-__all__ = [
-    "InteriorPack",
-    "Interior"
-]
+__all__ = ["InteriorPack", "Interior"]
 
 
 class InteriorPack(TypedDict):
@@ -27,6 +21,7 @@ class InteriorPack(TypedDict):
         - `side-center`: The center of a cell's 2-Dimensional side.
         - `corner`: The corner of a cell's 2-Dimensional side.
     """
+
     # Sunder identifiers.
     _name_: NotRequired[str]
     _variation_: NotRequired[int]
@@ -75,6 +70,7 @@ class Interior:
     """
     A collection of furniture for a given cell.
     """
+
     blueprint: Dict[str, Cell]
     interior_collection: InteriorCollection = field(
         init=False, default_factory=_load_interior_collection

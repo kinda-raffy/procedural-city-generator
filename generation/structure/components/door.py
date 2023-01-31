@@ -15,19 +15,15 @@ from typing import (
 )
 
 __all__ = [
-    'Door',
-    'DoorFactory',
+    "Door",
+    "DoorFactory",
 ]
 
 
 class Door(metaclass=ABCMeta):
     """Door Interface."""
-    def __init__(
-            self,
-            door_pos: Vec3,
-            /,
-            material: MaterialPack
-    ) -> NoReturn:
+
+    def __init__(self, door_pos: Vec3, /, material: MaterialPack) -> NoReturn:
         self._materials: Final = material
         self._pos: Final = door_pos
 
@@ -43,27 +39,21 @@ class Door(metaclass=ABCMeta):
 @final
 class OakDoor(Door):
     """A legacy oak door."""
+
     def place_single_door(self) -> NoReturn:
         # Create room.
         server_conn.setBlocks(
             self._pos + Vec3(0, 0, 0),
             self._pos + Vec3(0, 1, 0),
-            BlocEx['AIR'],
+            BlocEx["AIR"],
         )
-        assert self._materials['door'] == BlocEx['OAK_DOOR'], \
-            "OakDoor can only place legacy oak doors."
+        assert (
+            self._materials["door"] == BlocEx["OAK_DOOR"]
+        ), "OakDoor can only place legacy oak doors."
         # Door window.
-        server_conn.setBlock(
-            self._pos + Vec3(0, 1, 0),
-            self._materials['door'],
-            13
-        )
+        server_conn.setBlock(self._pos + Vec3(0, 1, 0), self._materials["door"], 13)
         # Door base.
-        server_conn.setBlock(
-            self._pos,
-            self._materials['door'],
-            2
-        )
+        server_conn.setBlock(self._pos, self._materials["door"], 2)
 
     def place_double_door(self) -> NoReturn:
         # TODO ~ Create a double door.
@@ -73,27 +63,21 @@ class OakDoor(Door):
 @final
 class NonOakDoor(Door):
     """A non-oak door with contemporary secondary codes."""
+
     def place_single_door(self) -> NoReturn:
         # Create room.
         server_conn.setBlocks(
             self._pos + Vec3(0, 0, 0),
             self._pos + Vec3(0, 1, 0),
-            BlocEx['AIR'],
+            BlocEx["AIR"],
         )
-        assert self._materials['door'] != BlocEx['OAK_DOOR'], \
-            "NonOakDoor cannot place legacy oak doors."
+        assert (
+            self._materials["door"] != BlocEx["OAK_DOOR"]
+        ), "NonOakDoor cannot place legacy oak doors."
         # Door window.
-        server_conn.setBlock(
-            self._pos + Vec3(0, 1, 0),
-            self._materials['door'],
-            10
-        )
+        server_conn.setBlock(self._pos + Vec3(0, 1, 0), self._materials["door"], 10)
         # Door base.
-        server_conn.setBlock(
-            self._pos,
-            self._materials['door'],
-            5
-        )
+        server_conn.setBlock(self._pos, self._materials["door"], 5)
 
     def place_double_door(self) -> NoReturn:
         # TODO ~ Create a double door.
@@ -103,13 +87,14 @@ class NonOakDoor(Door):
 @final
 class DoorFactory:
     """Door Factory. Does not retain ownership over produced instances."""
+
     @staticmethod
     def create(
-            door_pos: Vec3,
-            /,
-            material: MaterialPack,
+        door_pos: Vec3,
+        /,
+        material: MaterialPack,
     ) -> Door:
         """Creates a door."""
-        if material['door'] == BlocEx['OAK_DOOR']:
+        if material["door"] == BlocEx["OAK_DOOR"]:
             return OakDoor(door_pos, material)
         return NonOakDoor(door_pos, material)

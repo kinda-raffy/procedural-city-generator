@@ -1,11 +1,8 @@
 from __future__ import annotations
-from enum import (
-    ReprEnum,
-    unique
-)
+from enum import ReprEnum, unique
 
 __all__ = [
-    'BlockExt',
+    "BlockExt",
 ]
 
 
@@ -17,6 +14,7 @@ class BlockExt(tuple, ReprEnum):
     See original by @martinohanlon/mcpi.block.Block
     BlockExt supports block sub-states.
     """
+
     AIR = 0
     SANDSTONE = 24
     RED_SANDSTONE = 179
@@ -80,7 +78,7 @@ class BlockExt(tuple, ReprEnum):
     RED = 35, 14
     BLACK = 35, 15
     RED_CARPET = 171, 14
-    WHITE_CONCRETE = 251,
+    WHITE_CONCRETE = (251,)
     ORANGE_CONCRETE = 251, 1
     MAGENTA_CONCRETE = 251, 2
     LIGHT_BLUE_CONCRETE = 251, 3

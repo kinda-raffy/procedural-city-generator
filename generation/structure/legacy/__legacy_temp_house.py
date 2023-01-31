@@ -82,7 +82,7 @@ class House:
         ground = House.dict_to_list(self.generated_rooms)
         if self.apartment_pool:
             self.find_pool_location(ground=ground)
-        
+
         ground_floor = False
         upstairs = None
         start_room_vec = None
@@ -195,7 +195,6 @@ class House:
         self.create_downstairs()
         ground = House.dict_to_list(self.generated_rooms)
         self.find_pool_location(ground=ground)
-        
 
         if double_story > 2:
             ground_floor = False
@@ -240,9 +239,9 @@ class House:
                             self.generated_rooms[start_room_name][
                                 1
                             ].room_type = "downstairs_stairs"
-                            self.generated_rooms[start_room_name][
-                                1
-                            ].room_director(stair_type=self.stair_type)
+                            self.generated_rooms[start_room_name][1].room_director(
+                                stair_type=self.stair_type
+                            )
                             # furnishing for upstairs
                             for i in range(6, 9):
                                 self.create_furnish(gr_list=upstairs, index=i)
@@ -260,9 +259,9 @@ class House:
                             self.generated_rooms[start_room_name][
                                 1
                             ].room_type = "upstairs_stairs"
-                            self.generated_rooms[start_room_name][
-                                1
-                            ].room_director(stair_type=self.stair_type)
+                            self.generated_rooms[start_room_name][1].room_director(
+                                stair_type=self.stair_type
+                            )
                             # furnishing for the third level
                             for i in range(6, 9):
                                 self.create_furnish(gr_list=third_level, index=i)
@@ -475,42 +474,41 @@ class House:
             if "1" in key:
                 # main works well enough
                 mc.setBlock(start.x + 1, start.y, start.z + 1, matt_fur["main"])
-                
+
                 mc.setBlock(
                     start.x + 1, start.y + 1, start.z + 1, matt_fur["main_above"]
                 )
-                
+
                 mc.setBlock(
                     start.x + 1, start.y + 2, start.z + 1, matt_fur["main_ceil"]
                 )
-                
+
                 # top corners works
                 mc.setBlock(start.x, start.y + 2, start.z, matt_fur["ceil_tr"])
-                
+
                 mc.setBlock(end.x, end.y, end.z - 2, matt_fur["ceil_tl"])
-                
+
                 mc.setBlock(start.x, start.y + 2, start.z + 2, matt_fur["ceil_br"])
-                
+
                 mc.setBlock(end.x, end.y, end.z, matt_fur["ceil_bl"])
-                
+
                 # bottom corners works
                 mc.setBlock(start.x, start.y, start.z, matt_fur["floor_bl"])
-                
+
                 mc.setBlock(end.x, end.y - 2, end.z - 2, matt_fur["floor_tl"])
-                
+
                 mc.setBlock(start.x, start.y, start.z + 2, matt_fur["floor_br"])
-                
+
                 mc.setBlock(end.x, end.y - 2, end.z, matt_fur["floor_tr"])
-                
+
                 # top centers
                 mc.setBlock(start.x + 2, end.y, start.z + 1, matt_fur["ceil_front"])
-                
+
                 mc.setBlock(start.x + 1, end.y, start.z, matt_fur["ceil_left"])
-                
+
                 mc.setBlock(start.x + 1, end.y, start.z + 2, matt_fur["ceil_right"])
-                
+
                 mc.setBlock(start.x, start.y + 2, start.z + 1, matt_fur["ceil_back"])
-                
 
             elif "2" in key:
                 # main works
@@ -523,7 +521,6 @@ class House:
                     end.z - 1,
                     matt_fur["main"],
                 )
-                
 
                 mc.setBlocks(
                     start.x + 3,
@@ -534,7 +531,6 @@ class House:
                     end.z - 1,
                     matt_fur["main_above"],
                 )
-                
 
                 mc.setBlocks(
                     start.x + 3,
@@ -545,28 +541,28 @@ class House:
                     end.z - 1,
                     matt_fur["main_ceil"],
                 )
-                
+
                 # top corners works
                 mc.setBlock(start.x, start.y + 2, start.z, matt_fur["ceil_tr"])
-                
+
                 mc.setBlock(end.x, end.y, end.z - 2, matt_fur["ceil_tl"])
-                
+
                 mc.setBlock(start.x, start.y + 2, start.z + 2, matt_fur["ceil_br"])
-                
+
                 mc.setBlock(end.x, end.y, end.z, matt_fur["ceil_bl"])
-                
+
                 # bottom corners works
                 mc.setBlock(start.x, start.y, start.z, matt_fur["floor_bl"])
-                
+
                 mc.setBlock(end.x, end.y - 2, end.z - 2, matt_fur["floor_tl"])
-                
+
                 mc.setBlock(start.x, start.y, start.z + 2, matt_fur["floor_br"])
-                
+
                 mc.setBlock(end.x, end.y - 2, end.z, matt_fur["floor_tr"])
-                
+
                 # top centers
                 mc.setBlock(end.x, end.y, end.z - 1, matt_fur["ceil_front"])
-                
+
                 mc.setBlocks(
                     start.x + 2,
                     end.y,
@@ -576,7 +572,7 @@ class House:
                     end.z - 2,
                     matt_fur["ceil_left"],
                 )
-                
+
                 mc.setBlocks(
                     start.x + 2,
                     end.y,
@@ -586,12 +582,12 @@ class House:
                     end.z,
                     matt_fur["ceil_right"],
                 )
-                
+
                 mc.setBlock(start.x, start.y + 2, start.z + 1, matt_fur["ceil_back"])
-                
+
                 # bottom centers
                 # mc.setBlock(end.x, end.y - 2, end.z - 1, matt_fur['floor_front'])
-                
+
                 mc.setBlocks(
                     start.x + 2,
                     start.y,
@@ -601,7 +597,7 @@ class House:
                     start.z,
                     matt_fur["floor_left"],
                 )
-                
+
                 mc.setBlocks(
                     start.x + 2,
                     start.y,
@@ -611,9 +607,8 @@ class House:
                     start.z + 2,
                     matt_fur["floor_right"],
                 )
-                
+
                 # mc.setBlock(start.x, start.y, start.z + 1, matt_fur['floor_back'])
-                
 
             elif "3" in key:
 
@@ -636,7 +631,6 @@ class House:
                     start.z + 1,
                     matt_fur["main"],
                 )
-                
 
                 mc.setBlocks(
                     start.x + 2,
@@ -656,7 +650,6 @@ class House:
                     start.z + 1,
                     matt_fur["main_above"],
                 )
-                
 
                 mc.setBlocks(
                     start.x + 2,
@@ -676,28 +669,27 @@ class House:
                     start.z + 1,
                     matt_fur["main_ceil"],
                 )
-                
+
                 # top corners
                 mc.setBlock(start.x, start.y + 2, start.z, matt_fur["ceil_tr"])
-                
+
                 mc.setBlock(end.x, end.y, end.z - 2, matt_fur["ceil_tl"])
-                
+
                 mc.setBlock(start.x, start.y + 2, start.z + 2, matt_fur["ceil_br"])
-                
+
                 mc.setBlock(end.x, end.y, end.z, matt_fur["ceil_bl"])
-                
+
                 # bottom corners
                 mc.setBlock(start.x, start.y, start.z, matt_fur["floor_bl"])
-                
+
                 mc.setBlock(end.x, end.y - 2, end.z - 2, matt_fur["floor_tl"])
-                
+
                 mc.setBlock(start.x, start.y, start.z + 2, matt_fur["floor_br"])
-                
+
                 mc.setBlock(end.x, end.y - 2, end.z, matt_fur["floor_tr"])
-                
+
                 # top centers
 
-                
                 mc.setBlocks(
                     start.x + 2,
                     end.y,
@@ -707,7 +699,7 @@ class House:
                     start.z,
                     matt_fur["ceil_left"],
                 )
-                
+
                 mc.setBlocks(
                     start.x + 2,
                     end.y,
@@ -717,12 +709,9 @@ class House:
                     start.z + 2,
                     matt_fur["ceil_right"],
                 )
-                
 
-                
                 # bottom centers
 
-                
                 mc.setBlocks(
                     start.x + 2,
                     start.y,
@@ -732,7 +721,7 @@ class House:
                     start.z,
                     matt_fur["ceil_left"],
                 )
-                
+
                 mc.setBlocks(
                     start.x + 2,
                     start.y,
@@ -743,7 +732,6 @@ class House:
                     matt_fur["ceil_right"],
                 )
 
-                
                 # middle centers top
                 mc.setBlocks(
                     end.x - 2,
@@ -754,7 +742,7 @@ class House:
                     start.z,
                     matt_fur["ceil_left"],
                 )
-                
+
                 mc.setBlocks(
                     end.x - 2,
                     end.y,
@@ -764,7 +752,7 @@ class House:
                     start.z + 2,
                     matt_fur["ceil_right"],
                 )
-                
+
                 # middle centers bottom
                 mc.setBlocks(
                     end.x - 2,
@@ -775,7 +763,7 @@ class House:
                     start.z,
                     matt_fur["floor_left"],
                 )
-                
+
                 mc.setBlocks(
                     end.x - 2,
                     start.y,
@@ -785,8 +773,7 @@ class House:
                     start.z + 2,
                     matt_fur["floor_right"],
                 )
-                
-            
+
             if not self.biome == 3:
                 local_furniture_list.remove(matt_fur)
                 try:
@@ -1150,19 +1137,15 @@ class House:
         self.create_level(
             level_template=ground_floor_template,
             start_room=self.door_room,
-            is_ground_floor=True
+            is_ground_floor=True,
         )
 
     def create_level(
-            self,
-            level_template,
-            start_room,
-            is_ground_floor,
-            lowest_possible_rooms = 2
+        self, level_template, start_room, is_ground_floor, lowest_possible_rooms=2
     ):
         # Find the maximum number of rooms that may generate.
-        largest_possible_rooms = 0    # Highest number of rooms.
-        number_of_rooms = -1   # Number of rooms to be generated.
+        largest_possible_rooms = 0  # Highest number of rooms.
+        number_of_rooms = -1  # Number of rooms to be generated.
 
         # Increase the highest possible number of rooms based depending
         # on the number of permissible rooms in grid_cdr.
@@ -1175,12 +1158,18 @@ class House:
             if largest_possible_rooms < 2:
                 print(f"ERR: ran_high is lower than 2")
                 return False
-            elif largest_possible_rooms < 4:  # For possible larger houses, favor a higher number of rooms.
+            elif (
+                largest_possible_rooms < 4
+            ):  # For possible larger houses, favor a higher number of rooms.
                 bias = largest_possible_rooms - 1
             else:
-                bias = largest_possible_rooms - 2 # For possible smaller houses, favor a smaller number of rooms.
+                bias = (
+                    largest_possible_rooms - 2
+                )  # For possible smaller houses, favor a smaller number of rooms.
             # Determine the number of rooms to generate.
-            number_of_rooms = bias_random(lowest_possible_rooms, largest_possible_rooms, bias)
+            number_of_rooms = bias_random(
+                lowest_possible_rooms, largest_possible_rooms, bias
+            )
 
         # For apartments and skyscrapers.
         elif self.biome == 3:
@@ -1269,14 +1258,20 @@ class House:
                 self.generated_rooms[room_name] = [True, door_room]
                 print(f"Door Room: {room_name} | Created")
 
-                if not room_properties[0]:  # If template indicates the door room is false.
-                    return print("WARNING: Upstairs cannot be built as the door room is false")
+                if not room_properties[
+                    0
+                ]:  # If template indicates the door room is false.
+                    return print(
+                        "WARNING: Upstairs cannot be built as the door room is false"
+                    )
 
             else:
-                self.generated_rooms[room_name] = [False]  # Flag all other rooms as not being generated.
+                self.generated_rooms[room_name] = [
+                    False
+                ]  # Flag all other rooms as not being generated.
 
         # True center must always generate.
-        possible_locations = [(level_template['true_center'][1])]
+        possible_locations = [(level_template["true_center"][1])]
 
         # Find neighbouring rooms to generate based on existing rooms. Add these rooms to possible rooms.
         # For the number of rooms to generate.
@@ -1292,22 +1287,27 @@ class House:
                                 # If the room has not been generated.
                                 not self.generated_rooms["bottom_left"][0]
                                 # The room object is not in possible locations
-                                and level_template["bottom_left"][1] not in possible_locations
+                                and level_template["bottom_left"][1]
+                                not in possible_locations
                                 # The room has permissions to exist.
-                                and level_template["bottom_left"][0] is True                      #
+                                and level_template["bottom_left"][0] is True  #
                             ):
                                 # Then add the room to possible locations
-                                possible_locations.append(level_template["bottom_left"][1])
+                                possible_locations.append(
+                                    level_template["bottom_left"][1]
+                                )
                         if not key_name == "bottom_left":
                             if (
                                 not self.generated_rooms["top_left"][0]
-                                and level_template["top_left"][1] not in possible_locations
+                                and level_template["top_left"][1]
+                                not in possible_locations
                                 and level_template["top_left"][0] is True
                             ):
                                 possible_locations.append(level_template["top_left"][1])
                         if (
                             not self.generated_rooms["center_left"][0]
-                            and level_template["center_left"][1] not in possible_locations
+                            and level_template["center_left"][1]
+                            not in possible_locations
                             and level_template["center_left"][0] is True
                         ):
                             possible_locations.append(level_template["center_left"][1])
@@ -1320,17 +1320,23 @@ class House:
                                 not in possible_locations
                                 and level_template["bottom_right"][0] is True
                             ):
-                                possible_locations.append(level_template["bottom_right"][1])
+                                possible_locations.append(
+                                    level_template["bottom_right"][1]
+                                )
                         if not key_name == "bottom_right":
                             if (
                                 not self.generated_rooms["top_right"][0]
-                                and level_template["top_right"][1] not in possible_locations
+                                and level_template["top_right"][1]
+                                not in possible_locations
                                 and level_template["top_right"][0] is True
                             ):
-                                possible_locations.append(level_template["top_right"][1])
+                                possible_locations.append(
+                                    level_template["top_right"][1]
+                                )
                         if (
                             not self.generated_rooms["center_right"][0]
-                            and level_template["center_right"][1] not in possible_locations
+                            and level_template["center_right"][1]
+                            not in possible_locations
                             and level_template["center_right"][0] is True
                         ):
                             possible_locations.append(level_template["center_right"][1])
@@ -1339,20 +1345,25 @@ class House:
                         if not key_name == "top_left":
                             if (
                                 not self.generated_rooms["top_right"][0]
-                                and level_template["top_right"][1] not in possible_locations
+                                and level_template["top_right"][1]
+                                not in possible_locations
                                 and level_template["top_right"][0] is True
                             ):
-                                possible_locations.append(level_template["top_right"][1])
+                                possible_locations.append(
+                                    level_template["top_right"][1]
+                                )
                         if not key_name == "top_right":
                             if (
                                 not self.generated_rooms["top_left"][0]
-                                and level_template["top_left"][1] not in possible_locations
+                                and level_template["top_left"][1]
+                                not in possible_locations
                                 and level_template["top_left"][0] is True
                             ):
                                 possible_locations.append(level_template["top_left"][1])
                         if (
                             not self.generated_rooms["top_center"][0]
-                            and level_template["top_center"][1] not in possible_locations
+                            and level_template["top_center"][1]
+                            not in possible_locations
                             and level_template["top_center"][0] is True
                         ):
                             possible_locations.append(level_template["top_center"][1])
@@ -1365,43 +1376,57 @@ class House:
                                 not in possible_locations
                                 and level_template["bottom_right"][0] is True
                             ):
-                                possible_locations.append(level_template["bottom_right"][1])
+                                possible_locations.append(
+                                    level_template["bottom_right"][1]
+                                )
                         if not key_name == "bottom_right":
                             if (
                                 not self.generated_rooms["bottom_left"][0]
-                                and level_template["bottom_left"][1] not in possible_locations
+                                and level_template["bottom_left"][1]
+                                not in possible_locations
                                 and level_template["bottom_left"][0] is True
                             ):
-                                possible_locations.append(level_template["bottom_left"][1])
+                                possible_locations.append(
+                                    level_template["bottom_left"][1]
+                                )
                         if (
                             not self.generated_rooms["bottom_center"][0]
-                            and level_template["bottom_center"][1] not in possible_locations
+                            and level_template["bottom_center"][1]
+                            not in possible_locations
                             and level_template["bottom_center"][0] is True
                         ):
-                            possible_locations.append(level_template["bottom_center"][1])
+                            possible_locations.append(
+                                level_template["bottom_center"][1]
+                            )
 
                     if "true" in key_name:
                         if (
                             not self.generated_rooms["bottom_center"][0]
-                            and level_template["bottom_center"][1] not in possible_locations
+                            and level_template["bottom_center"][1]
+                            not in possible_locations
                             and level_template["bottom_center"][0] is True
                         ):
-                            possible_locations.append(level_template["bottom_center"][1])
+                            possible_locations.append(
+                                level_template["bottom_center"][1]
+                            )
                         if (
                             not self.generated_rooms["top_center"][0]
-                            and level_template["top_center"][1] not in possible_locations
+                            and level_template["top_center"][1]
+                            not in possible_locations
                             and level_template["top_center"][0] is True
                         ):
                             possible_locations.append(level_template["top_center"][1])
                         if (
                             not self.generated_rooms["center_right"][0]
-                            and level_template["center_right"][1] not in possible_locations
+                            and level_template["center_right"][1]
+                            not in possible_locations
                             and level_template["center_right"][0] is True
                         ):
                             possible_locations.append(level_template["center_right"][1])
                         if (
                             not self.generated_rooms["center_left"][0]
-                            and level_template["center_left"][1] not in possible_locations
+                            and level_template["center_left"][1]
+                            not in possible_locations
                             and level_template["center_left"][0] is True
                         ):
                             possible_locations.append(level_template["center_left"][1])
@@ -1454,7 +1479,9 @@ class House:
         for room_name, room_properties in self.generated_rooms.items():
             if room_properties[0]:
                 # Add windows depending on location.
-                room_properties[1].window_locations(generated_rooms=self.generated_rooms)
+                room_properties[1].window_locations(
+                    generated_rooms=self.generated_rooms
+                )
 
         # Remove walls of all generated rooms.
         for room_name in self.generated_rooms:
@@ -1463,6 +1490,7 @@ class House:
                     generated_rooms=self.generated_rooms,
                     internal_wall_dice=self.internal_wall_dice,
                 )
+
     # END create_level
 
     # Return key for any dict value
@@ -1506,11 +1534,11 @@ class Room:
     def room_director(self, stair_type=""):
         if self.room_type == "normal":
             self.add_foundation(ground_floor=self.ground_floor)
-            
+
             self.add_structure()
-            
+
             self.add_pillars(ground_floor=self.ground_floor)
-            
+
             self.add_roof(roof_type=self.roof_type)
         elif self.room_type == "empty":
             pass
@@ -1518,13 +1546,13 @@ class Room:
             self.add_pool()
         elif self.room_type == "door":
             self.add_foundation(ground_floor=self.ground_floor)
-            
+
             self.add_structure()
-            
+
             self.add_pillars(ground_floor=self.ground_floor)
-            
+
             self.add_roof(roof_type=self.roof_type)
-            
+
         elif self.room_type == "downstairs_stairs":
             self.stair_room(stair_type=stair_type)
         elif self.room_type == "upstairs_stairs":
@@ -1607,10 +1635,7 @@ class Room:
                 self.mat_pack["slab"],
             )
             mc.setBlock(
-                self.pos.x + 2,
-                self.pos.y,
-                self.pos.z + 2,
-                self.mat_pack["slab"]
+                self.pos.x + 2, self.pos.y, self.pos.z + 2, self.mat_pack["slab"]
             )
             mc.setBlock(
                 self.pos.x + 3,
@@ -1618,7 +1643,6 @@ class Room:
                 self.pos.z + 2,
                 self.mat_pack["slab"],
             )
-
 
     def set_stairs(self, stair_type):
         # stair_dice = random.choice(stair_options)
@@ -1681,7 +1705,6 @@ class Room:
                 self.pos.z + 3,
                 self.mat_pack["walls"],
             )
-            
 
         elif stair_type == "double_stairs":
             # double stairs
@@ -1733,7 +1756,6 @@ class Room:
                 self.pos.z + 3,
                 self.mat_pack["walls"],
             )
-            
 
         elif stair_type == "double_slab":
             # double-stairs but with slabs
@@ -1764,7 +1786,7 @@ class Room:
             mc.setBlock(
                 self.pos.x + 2, self.pos.y + 3, self.pos.z + 3, self.mat_pack["slab"]
             )
-            
+
     def add_pool(self, large=False, direction=""):
         pool_shade_spawned = False
         if not large:
@@ -1873,7 +1895,7 @@ class Room:
                     self.pos.y + 3,
                     self.pos.z + 4,
                 )
-                
+
                 # always spawn in shade
                 self.add_single_pillar(Vec3(0, 0, 0))
                 self.add_single_pillar(Vec3(4, 0, 0))
@@ -1922,7 +1944,7 @@ class Room:
                     self.pos.y + 3,
                     self.pos.z + 4,
                 )
-                
+
             # Fully open pool surrounded by fences
             elif pool_border_dice == 2:
                 self.add_fenced_pool()
@@ -1947,7 +1969,7 @@ class Room:
                     self.pos.z,
                     block.AIR.id,
                 )
-                
+
             elif direction == "horizontal":
                 mc.setBlocks(
                     self.pos.x + 4,
@@ -1958,7 +1980,7 @@ class Room:
                     self.pos.z + 3,
                     block.AIR.id,
                 )
-                
+
         mc.setBlocks(
             self.pos.x,
             self.pos.y - 3,
@@ -2018,7 +2040,7 @@ class Room:
         )
         self.block_above_fence(x=self.pos.x, y=self.pos.y + 1, z=self.pos.z + 4)
         self.block_above_fence(x=self.pos.x + 4, y=self.pos.y + 1, z=self.pos.z + 4)
-        
+
         # add gates
         mc.setBlock(
             self.pos.x, self.pos.y + 1, self.pos.z + 2, self.mat_pack["fence_gate"], 1
@@ -2217,7 +2239,7 @@ class Room:
                     end_pos.z,
                     self.mat_pack["windows"],
                 )
-                
+
             elif ran == 2:
                 # plus window in middle
                 if direction == "vertical":
@@ -2226,13 +2248,13 @@ class Room:
                         start_pos.y + 1,
                         start_pos.z,
                         self.mat_pack["windows"],
-                        )
+                    )
                     mc.setBlock(
                         start_pos.x + 1,
                         start_pos.y + 3,
                         start_pos.z,
                         self.mat_pack["windows"],
-                        )
+                    )
                     mc.setBlocks(
                         start_pos.x,
                         start_pos.y + 2,
@@ -2241,20 +2263,20 @@ class Room:
                         end_pos.y + 2,
                         end_pos.z,
                         self.mat_pack["windows"],
-                        )
+                    )
                 else:
                     mc.setBlock(
                         start_pos.x,
                         start_pos.y + 3,
                         start_pos.z + 1,
                         self.mat_pack["windows"],
-                        )
+                    )
                     mc.setBlock(
                         start_pos.x,
                         start_pos.y + 1,
                         start_pos.z + 1,
                         self.mat_pack["windows"],
-                        )
+                    )
                     mc.setBlocks(
                         start_pos.x,
                         start_pos.y + 2,
@@ -2263,7 +2285,7 @@ class Room:
                         end_pos.y + 2,
                         end_pos.z,
                         self.mat_pack["windows"],
-                        )
+                    )
 
             # single window in centre
             elif ran == 3:
@@ -2281,7 +2303,7 @@ class Room:
                         start_pos.z + 1,
                         self.mat_pack["windows"],
                     )
-                
+
             # full window
             elif ran == 4:
                 mc.setBlocks(
@@ -2778,7 +2800,6 @@ class Room:
                 self.mat_pack["foundation"],
             )
 
-            
             mc.setBlocks(
                 self.pos.x,
                 self.pos.y - 1,
@@ -2788,7 +2809,6 @@ class Room:
                 self.pos.z + self.dimension.z,
                 self.mat_pack["foundation"],
             )
-            
 
             # Pyramid foundation.
             # for i in range(1, 12):
@@ -2805,7 +2825,7 @@ class Room:
                 self.pos.z + self.dimension.z,
                 self.mat_pack["upstairs_floor"],
             )
-            
+
         pass
 
     def add_structure(self):
@@ -2876,7 +2896,7 @@ class Room:
                     pointer_z,
                     self.mat_pack["pillars"],
                 )
-                
+
                 # Move the z pointer to the right if i is even; else move pointer to left
                 if i % 2 == 0:
                     pointer_z = self.pos.z + self.dimension.z
@@ -2898,7 +2918,7 @@ class Room:
                     pointer_z,
                     self.mat_pack["pillars"],
                 )
-                
+
                 # Move the z pointer to the right if i is even; else move pointer to left
                 if i % 2 == 0:
                     pointer_z = self.pos.z + self.dimension.z
@@ -3065,7 +3085,7 @@ class Room:
                     pointer_z,
                     self.mat_pack["roof_corner"],
                 )
-                
+
                 # Move the z pointer to the right if i is even; else move pointer to left
                 if i % 2 == 0:
                     pointer_z = self.pos.z + self.dimension.z
@@ -3128,7 +3148,7 @@ class Room:
                     pointer_z,
                     self.mat_pack["roof_corner"],
                 )
-                
+
                 # Move the z pointer to the right if i is even; else move pointer to left
                 if i % 2 == 0:
                     pointer_z = self.pos.z + self.dimension.z
@@ -3196,7 +3216,7 @@ class Room:
                     pointer_z,
                     self.mat_pack["roof_corner"],
                 )
-                
+
                 # Move the z pointer to the right if i is even; else move pointer to left
                 if i % 2 == 0:
                     pointer_z = self.pos.z + self.dimension.z
@@ -3270,7 +3290,7 @@ class Room:
                     pointer_z,
                     self.mat_pack["roof_corner"],
                 )
-                
+
                 # Move the z pointer to the right if i is even; else move pointer to left
                 if i % 2 == 0:
                     pointer_z = self.pos.z + z_deviation + self.dimension.z
@@ -3284,6 +3304,7 @@ class Room:
 # Random generation
 def bias_random(low, high, mode):
     return int(random.triangular(low, high, mode))
+
 
 class DoorError(Exception):
     def __init__(
@@ -3299,8 +3320,8 @@ class DoorError(Exception):
         Door POS is set to: {door_pos}
         Door HINGE_POS is et to: {door_hinge_pos}"""
         super().__init__(self.message)
-        
-        
+
+
 def main():
     center = mc.player.getPos()
     door_room = Vec3(center.x - 4, center.y, center.z)

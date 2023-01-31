@@ -15,10 +15,8 @@ import logging
 
 from mcpi.vec3 import Vec3
 from generation import connection as server_conn
-from generation.structure.errors.structure \
-    import BiomeNotImplemented
-from generation.structure.utils.block_extension \
-    import BlockExt as BlocEx
+from generation.structure.errors.structure import BiomeNotImplemented
+from generation.structure.utils.block_extension import BlockExt as BlocEx
 from generation.biome import Biome
 
 if TYPE_CHECKING:
@@ -30,10 +28,12 @@ __all__ = [
     "Environment",
 ]
 
-logger = logging.getLogger('structure')
+logger = logging.getLogger("structure")
+
 
 class MaterialPack(TypedDict):
     """Global material pack for structural generation."""
+
     # Sunder identifiers. Used only for logging.
     _name_: NotRequired[str]
     _description_: NotRequired[str]
@@ -67,6 +67,7 @@ class Environment:
     """
     Collection of environment related functions.
     """
+
     biome: Biome
     builder: Type[Builder]
 
@@ -79,39 +80,36 @@ class Environment:
     def get_material_pack(self) -> MaterialPack:
         """Load materials from TOML file."""
         biome: Final[str] = self.biome[0].name.lower()
-        structure_type: Final[str] = \
-            self.builder.__name__.removesuffix('Builder').lower()
+        structure_type: Final[str] = self.builder.__name__.removesuffix(
+            "Builder"
+        ).lower()
 
-        logger.debug(f'Loading materials for {biome} {structure_type}')
-        with open(f'config/material_packs/{biome}.toml', 'rb') as file:
+        logger.debug(f"Loading materials for {biome} {structure_type}")
+        with open(f"config/material_packs/{biome}.toml", "rb") as file:
             config: Dict[str, Any] = tomllib.load(file)
-        assert structure_type in config['meta']['supported_structures'], \
-            f'{biome} does not support {structure_type}.'
+        assert (
+            structure_type in config["meta"]["supported_structures"]
+        ), f"{biome} does not support {structure_type}."
 
         pack: Dict[str, Any] = random.choice(config[biome][structure_type])
         # Transform materials into BlockExt objects.
         loaded_pack = {
-            k: BlocEx[v.upper()]
-            if isinstance(v, str) else v
-            for k, v in pack.items()
+            k: BlocEx[v.upper()] if isinstance(v, str) else v for k, v in pack.items()
         }
         # Add optional metadata for debugging + logging.
-        for k, v in loaded_pack.pop('_info').items():
-            loaded_pack[f'_{k}_'] = v
-            logger.debug(f'Material pack meta: {v}')
+        for k, v in loaded_pack.pop("_info").items():
+            loaded_pack[f"_{k}_"] = v
+            logger.debug(f"Material pack meta: {v}")
         return loaded_pack
 
     @staticmethod
     def clear_block(
-            block_dimensions: Vec3,
-            /, *,
-            ground: int,
-            cell_floor: int = 2
+        block_dimensions: Vec3, /, *, ground: int, cell_floor: int = 2
     ) -> None:
-        logger.debug('Clearing block.')
+        logger.debug("Clearing block.")
         block_dimensions.y += cell_floor
         server_conn.setBlocks(
             block_dimensions + Vec3(0, ground, 0),
             block_dimensions,
-            BlocEx['AIR'],
+            BlocEx["AIR"],
         )

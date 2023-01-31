@@ -6,7 +6,7 @@ from enum import (
     unique,
 )
 
-__all__ = ['Biome']
+__all__ = ["Biome"]
 
 
 @unique

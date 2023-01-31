@@ -21,11 +21,11 @@ from enum import (
 )
 
 __all__ = [
-    'WindowType',
-    'WindowOrientation',
-    'WindowPos',
-    'Window',
-    'WindowFactory',
+    "WindowType",
+    "WindowOrientation",
+    "WindowPos",
+    "Window",
+    "WindowFactory",
 ]
 
 
@@ -53,10 +53,10 @@ class Window(metaclass=ABCMeta):
     """Window Interface."""
 
     def __init__(
-            self,
-            window_pos: WindowPos,
-            /,
-            materials: MaterialPack,
+        self,
+        window_pos: WindowPos,
+        /,
+        materials: MaterialPack,
     ) -> NoReturn:
         self._materials: Final = materials
         self._start_pos: Final = window_pos.start
@@ -71,12 +71,12 @@ class DirectionalWindow(Window, metaclass=ABCMeta):
     """Windows were placement varies depending on direction."""
 
     def __init__(
-            self,
-            window_pos: WindowPos,
-            /,
-            materials: MaterialPack,
-            *,
-            direction: WindowOrientation
+        self,
+        window_pos: WindowPos,
+        /,
+        materials: MaterialPack,
+        *,
+        direction: WindowOrientation,
     ) -> NoReturn:
         super().__init__(window_pos, materials)
         self.__direction: Final = direction
@@ -99,46 +99,43 @@ class DirectionalWindow(Window, metaclass=ABCMeta):
 
 
 class DoubleBarWindow(Window):
-
     def place(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
         end_pos: Vec3 = self._end_pos
         server_conn.setBlocks(
             start_pos + Vec3(0, 2, 0),
             end_pos + Vec3(0, 3, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
 
 
 class HorizontalStripWindow(Window):
-
     def place(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
         end_pos: Vec3 = self._end_pos
         server_conn.setBlocks(
             start_pos + Vec3(0, 2, 0),
             end_pos + Vec3(0, 2, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
 
 
 class PlusWindow(DirectionalWindow):
-
     def _place_vertical(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
         end_pos: Vec3 = self._end_pos
         server_conn.setBlock(
             start_pos + Vec3(1, 1, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
         server_conn.setBlock(
             start_pos + Vec3(1, 3, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
         server_conn.setBlocks(
             start_pos + Vec3(0, 2, 0),
             end_pos + Vec3(0, 2, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
 
     def _place_horizontal(self) -> NoReturn:
@@ -146,45 +143,43 @@ class PlusWindow(DirectionalWindow):
         end_pos: Vec3 = self._end_pos
         server_conn.setBlock(
             start_pos + Vec3(0, 3, 1),
-            self._materials['windows'],
+            self._materials["windows"],
         )
         server_conn.setBlock(
             start_pos + Vec3(0, 1, 1),
-            self._materials['windows'],
+            self._materials["windows"],
         )
         server_conn.setBlocks(
             start_pos + Vec3(0, 2, 0),
             end_pos + Vec3(0, 2, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
 
 
 class SingleCenterWindow(DirectionalWindow):
-
     def _place_vertical(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
         server_conn.setBlock(
             start_pos + Vec3(1, 2, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
 
     def _place_horizontal(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
         server_conn.setBlock(
             start_pos + Vec3(0, 2, 1),
-            self._materials['windows'],
+            self._materials["windows"],
         )
 
 
 class FullWindow(Window):
-
     def place(self) -> NoReturn:
         start_pos: Vec3 = self._start_pos
         end_pos: Vec3 = self._end_pos
         server_conn.setBlocks(
             start_pos + Vec3(0, 1, 0),
             end_pos + Vec3(0, 3, 0),
-            self._materials['windows'],
+            self._materials["windows"],
         )
 
 
@@ -205,14 +200,14 @@ class WindowFactory:
 
     @classmethod
     def create(
-            cls,
-            cell_center: Vec3,
-            material: MaterialPack,
-            /,
-            cell_window_faces: CellDirection,
-            window_type: WindowType = WindowType.FULL,
-            *,
-            direction: WindowOrientation = None
+        cls,
+        cell_center: Vec3,
+        material: MaterialPack,
+        /,
+        cell_window_faces: CellDirection,
+        window_type: WindowType = WindowType.FULL,
+        *,
+        direction: WindowOrientation = None,
     ) -> Window:
         # Determine the window position.
         window_pos: WindowPos = WindowFactory._get_window_pos(
@@ -222,15 +217,12 @@ class WindowFactory:
             return cls.__base_window_types[window_type](window_pos, material)
         else:
             return cls.__directional_window_types[window_type](
-                window_pos,
-                material,
-                direction=direction
+                window_pos, material, direction=direction
             )
 
     @staticmethod
     def _get_window_pos(
-            cell_center: Vec3,
-            cell_window_face: CellDirection
+        cell_center: Vec3, cell_window_face: CellDirection
     ) -> WindowPos:
         """TODO: Implement direction based window positioning."""
         return WindowPos(Vec3(0, 0, 0), Vec3(0, 0, 0))

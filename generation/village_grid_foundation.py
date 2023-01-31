@@ -33,13 +33,6 @@ class VillageGridFoundation:  # TODO: Test function to display edges between con
             if prohibited_terrain is not None
             else {TerrainType.LAVA, TerrainType.TREE}
         )
-        # Functions used repeatedly to create adjacent units.
-        self.__adjacent_unit_functions: list[typing.Callable] = [
-            VillageGridUnit.create_unit_north,
-            VillageGridUnit.create_unit_east,
-            VillageGridUnit.create_unit_south,
-            VillageGridUnit.create_unit_west,
-        ]
 
     def __iter__(self) -> typing.Iterator[VillageGridUnit]:
         for grid_unit in self._adjacency_list:
@@ -69,7 +62,7 @@ class VillageGridFoundation:  # TODO: Test function to display edges between con
 
     @unit_side_length.setter
     def unit_side_length(self, unit_side_length: int) -> None:
-        # Ensure side length and separation are not altered after grid is generated.
+        # NOTE: This should ensure the side length and separation are not altered after the grid is generated.
         if (
             self.adjacency_list
             or self._edge_weights
@@ -152,13 +145,13 @@ class VillageGridFoundation:  # TODO: Test function to display edges between con
         )
 
     def build_village_grid(self, *, auto_connect: bool = True) -> set[VillageGridUnit]:
+        # TODO: Multithread this process? Look into other data structures for parallelisation.
         visited_units: set[VillageGridUnit] = set()
         include_units: set[VillageGridUnit] = set()
         # The frontier tracks all units to be visited from starting position.
         frontier: deque[VillageGridUnit] = deque()
         frontier.append(VillageGridUnit(self.starting_position, (0, 0)))
-        # Visit each unit using breadth-first search.
-        # Connect adjacent units if they exist and create new units where they don't.
+        # Breadth-first search; connect adjacent units if they exist, otherwise create new units.
         while frontier and len(include_units) < self.unit_upper_bound:
             current_unit: VillageGridUnit = frontier.popleft()
             if current_unit not in visited_units:
@@ -169,7 +162,7 @@ class VillageGridFoundation:  # TODO: Test function to display edges between con
                     current_unit, label_x, label_y
                 )
                 for unit_already_exists, unit_creation_function in zip(
-                    adjacent_exists, self.__adjacent_unit_functions
+                    adjacent_exists, VillageGridUnit.adjacent_unit_positions
                 ):
                     # If no unit exists yet, create one and connect it to the grid.
                     if not unit_already_exists:
@@ -196,9 +189,11 @@ class VillageGridFoundation:  # TODO: Test function to display edges between con
         label_direction_offsets: list[tuple[int]] = [(-1, 0), (0, 1), (1, 0), (0, -1)]
         # Check each direction for existing unit and connect if found.
         for index, (x_offset, y_offset) in enumerate(label_direction_offsets):
-            new_x, new_y = label_x + x_offset, label_y + y_offset
+            adjacent_x, adjacent_y = label_x + x_offset, label_y + y_offset
             if (
-                found_unit := self.find_grid_unit(coordinate_label=(new_x, new_y))
+                found_unit := self.find_grid_unit(
+                    coordinate_label=(adjacent_x, adjacent_y)
+                )
                 is not None
             ):
                 self.add_grid_edge(current_unit, found_unit)

@@ -5,6 +5,7 @@ from mcpi.vec3 import Vec3
 
 class MathVec3(Vec3):
     """Extends mcpi.vec3 with mathematical dunders."""
+
     def __truediv__(self, other: MathVec3) -> MathVec3:
         return MathVec3(self.x / other, self.y / other, self.z / other)
 

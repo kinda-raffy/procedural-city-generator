@@ -1,34 +1,25 @@
 from __future__ import annotations
-from typing import (
-    Protocol,
-    NoReturn,
-    Type,
-    Final,
-    final
-)
+from typing import Protocol, NoReturn, Type, Final, final
 
 import logging
 
-from builder import (
-    Builder,
-    ResidentialBuilder,
-    HouseBuilder
-)
+from builder import Builder, ResidentialBuilder, HouseBuilder
 from mcpi.vec3 import Vec3
 from generation.biome import Biome
 from generation.structure.errors.structure import DirectorDoesNotExist
 
 
 __all__ = [
-    'Director',
-    'DirectorFactory',
+    "Director",
+    "DirectorFactory",
 ]
 
-logger = logging.getLogger('structure')
+logger = logging.getLogger("structure")
 
 
 class Director(Protocol):
     """Director Interface."""
+
     # TODO ~ Add Documentation.
 
     def build(self) -> NoReturn:
@@ -38,13 +29,14 @@ class Director(Protocol):
 @final
 class ResidentialDirector:
     def __init__(
-            self,
-            builder: Type[ResidentialBuilder],
-            biome: Biome,
-            /, *,
-            dimensions: Vec3,
-            entry: Vec3,
-            center: Vec3
+        self,
+        builder: Type[ResidentialBuilder],
+        biome: Biome,
+        /,
+        *,
+        dimensions: Vec3,
+        entry: Vec3,
+        center: Vec3,
     ) -> NoReturn:
         self._builder: Final = builder
         self._biome: Final = biome
@@ -53,12 +45,12 @@ class ResidentialDirector:
         self._center: Final = center
 
     def build(self) -> NoReturn:
-        logger.info(f'{self.__class__.__name__} coordinating build process.')
+        logger.info(f"{self.__class__.__name__} coordinating build process.")
         with self._builder(
             self._biome,
             build_dimensions=self._size,
             entry=self._entrance,
-            center=self._center
+            center=self._center,
         ) as builder:
             builder.create_structure()
             builder.create_stairs()
@@ -71,22 +63,21 @@ class ResidentialDirector:
 @final
 class DirectorFactory:
     """Determines an appropriate director at runtime."""
+
     # TODO ~ Add Documentation.
 
-    __builder_to_director_map: Final = {
-        'ResidentialBuilder': ResidentialDirector
-    }
+    __builder_to_director_map: Final = {"ResidentialBuilder": ResidentialDirector}
 
     @classmethod
     def register(
-            cls,
-            builder: Type[Builder],
-            /,
-            biome: Biome,
-            size: Vec3,
-            *,
-            entry: Vec3,
-            center: Vec3,
+        cls,
+        builder: Type[Builder],
+        /,
+        biome: Biome,
+        size: Vec3,
+        *,
+        entry: Vec3,
+        center: Vec3,
     ) -> Director:
         """
         Registers a house request with an appropriate director.
@@ -96,13 +87,9 @@ class DirectorFactory:
         # under C3 linearization.
         for builder_ in [cls_.__name__ for cls_ in builder.__mro__]:
             if builder_ in cls.__builder_to_director_map:
-                logger.debug(f'Dispatching director to handle {builder_}.')
+                logger.debug(f"Dispatching director to handle {builder_}.")
                 return cls.__builder_to_director_map[builder_](
-                    builder,
-                    biome,
-                    dimensions=size,
-                    entry=entry,
-                    center=center
+                    builder, biome, dimensions=size, entry=entry, center=center
                 )
         raise DirectorDoesNotExist(builder)
 
@@ -113,10 +100,10 @@ def test() -> NoReturn:
         Biome.GRASSY,
         size=Vec3(10, 10, 10),
         entry=Vec3(0, 0, 5),
-        center=Vec3(5, 5, 5)
+        center=Vec3(5, 5, 5),
     )
     house.build()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test()

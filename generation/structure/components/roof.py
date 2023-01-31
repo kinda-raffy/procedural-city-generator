@@ -17,9 +17,9 @@ from enum import (
 )
 
 __all__ = [
-    'RoofType',
-    'Roof',
-    'RoofFactory',
+    "RoofType",
+    "Roof",
+    "RoofFactory",
 ]
 
 
@@ -35,6 +35,7 @@ class RoofType(StrEnum):
 @runtime_checkable
 class Roof(Protocol):
     """Roof Interface."""
+
     def place_base(self) -> NoReturn:
         """Places the essential roof elements."""
 
@@ -48,12 +49,7 @@ class Roof(Protocol):
 
 class DefaultRoof:
     def __init__(
-            self,
-            cell_center: Vec3,
-            /,
-            materials: MaterialPack,
-            *,
-            cell_dim: Vec3
+        self, cell_center: Vec3, /, materials: MaterialPack, *, cell_dim: Vec3
     ) -> NoReturn:
         self._materials: Final = materials
         self._cell_dim: Final = cell_dim
@@ -67,7 +63,7 @@ class DefaultRoof:
         server_conn.setBlocks(
             cell_center + Vec3(0, offset.y, 0),
             cell_center + offset,
-            self._materials['roof_outer']
+            self._materials["roof_outer"],
         )
 
         # Middle sunroof.
@@ -75,7 +71,7 @@ class DefaultRoof:
         z_middle = offset.z // 2
         server_conn.setBlock(
             cell_center + Vec3(x_middle, offset.y, z_middle),
-            self._materials['sunroof'],
+            self._materials["sunroof"],
         )
 
     def place_corners(self, *, deviation: Vec3 = Vec3(0, 0, 0)) -> NoReturn:
@@ -91,17 +87,22 @@ class FlatRoof(DefaultRoof):
 
         offset: Vec3 = self._cell_dim
         cell_center: Vec3 = self._cell_center
-        rotating_vec: Vec3 = self._cell_center + Vec3(deviation.x, deviation.y, -deviation.z)
+        rotating_vec: Vec3 = self._cell_center + Vec3(
+            deviation.x, deviation.y, -deviation.z
+        )
         # Iterate from the front-left corner.
         for index in range(5):
             server_conn.setBlock(
                 rotating_vec + Vec3(0, offset.y, 0),
-                self._materials['roof_corner'],
+                self._materials["roof_corner"],
             )
 
             # Move z to the right else left.
-            rotating_vec.z = cell_center.z + deviation.z + cell_center.z \
-                if index % 2 else cell_center.z - deviation.z
+            rotating_vec.z = (
+                cell_center.z + deviation.z + cell_center.z
+                if index % 2
+                else cell_center.z - deviation.z
+            )
 
             # Move x to the back after the two front corners.
             if index > 1:
@@ -118,31 +119,31 @@ class AngledFlatRoof(FlatRoof):
         server_conn.setBlocks(
             cell_center + Vec3(0, offset.y, 0),
             cell_center + Vec3(0, offset.y, offset.z),
-            self._materials['slab'],
+            self._materials["slab"],
         )
         # East.
         server_conn.setBlocks(
             cell_center + Vec3(0, offset.y, offset.z),
             cell_center + offset,
-            self._materials['slab'],
+            self._materials["slab"],
         )
         # West.
         server_conn.setBlocks(
             cell_center + Vec3(0, offset.y, 0),
             cell_center + Vec3(offset.x, offset.y, 0),
-            self._materials['slab'],
+            self._materials["slab"],
         )
         # South.
         server_conn.setBlocks(
             cell_center + Vec3(offset.x, offset.y, 0),
             cell_center + offset,
-            self._materials['slab'],
+            self._materials["slab"],
         )
-        
+
     def place_corners(self, *, deviation: Vec3 = Vec3(0, 0, 0)) -> NoReturn:
         super(AngledFlatRoof, self).place_corners()
-    
-    
+
+
 class StairFlatRoof(FlatRoof):
     def place_base(self) -> NoReturn:
         super(StairFlatRoof, self).place_base()
@@ -153,28 +154,28 @@ class StairFlatRoof(FlatRoof):
         server_conn.setBlocks(
             cell_center + Vec3(0, offset.y, 0),
             cell_center + Vec3(0, offset.y, offset.z),
-            self._materials['stairs'],
+            self._materials["stairs"],
             _north,
         )
         server_conn.setBlocks(
             cell_center + Vec3(0, offset.y, offset.z),
             cell_center + offset,
-            self._materials['stairs'],
+            self._materials["stairs"],
             _east,
         )
         server_conn.setBlocks(
             cell_center + Vec3(0, offset.y, 0),
             cell_center + Vec3(offset.x, offset.y, 0),
-            self._materials['stairs'],
+            self._materials["stairs"],
             _west,
         )
         server_conn.setBlocks(
             cell_center + Vec3(offset.x, offset.y, 0),
             cell_center + offset,
-            self._materials['stairs'],
+            self._materials["stairs"],
             _south,
         )
-        
+
     def place_corners(self, *, deviation: Vec3 = Vec3(0, 0, 0)) -> NoReturn:
         super(StairFlatRoof, self).place_corners()
 
@@ -189,59 +190,37 @@ class StairMedRoof(StairFlatRoof):
         x_deviation, y_deviation, z_deviation = Vec3(1, 1, -1)
         # Second level of stairs.
         server_conn.setBlocks(
-            cell_center + Vec3(
-                x_deviation,
-                y_deviation + offset.y,
-                -z_deviation
-            ),
-            cell_center + Vec3(
-                x_deviation,
-                y_deviation + offset.y,
-                z_deviation + offset.z
-            ),
-            self._materials['stairs'],
+            cell_center + Vec3(x_deviation, y_deviation + offset.y, -z_deviation),
+            cell_center
+            + Vec3(x_deviation, y_deviation + offset.y, z_deviation + offset.z),
+            self._materials["stairs"],
             _north,
         )
         server_conn.setBlocks(
-            cell_center + Vec3(
-                x_deviation,
-                y_deviation + offset.y,
-                z_deviation + offset.z
+            cell_center
+            + Vec3(x_deviation, y_deviation + offset.y, z_deviation + offset.z),
+            cell_center
+            + Vec3(
+                -x_deviation + offset.x, y_deviation + offset.y, z_deviation + offset.z
             ),
-            cell_center + Vec3(
-                -x_deviation + offset.x,
-                y_deviation + offset.y,
-                z_deviation + offset.z
-            ),
-            self._materials['stairs'],
+            self._materials["stairs"],
             _east,
         )
         server_conn.setBlocks(
-            cell_center + Vec3(
-                x_deviation,
-                y_deviation + offset.y,
-                -z_deviation
-            ),
-            cell_center + Vec3(
-                -x_deviation + offset.x,
-                y_deviation + offset.y,
-                -z_deviation
-            ),
-            self._materials['stairs'],
+            cell_center + Vec3(x_deviation, y_deviation + offset.y, -z_deviation),
+            cell_center
+            + Vec3(-x_deviation + offset.x, y_deviation + offset.y, -z_deviation),
+            self._materials["stairs"],
             _west,
         )
         server_conn.setBlocks(
-            cell_center + Vec3(
-                -x_deviation + offset.x,
-                y_deviation + offset.y,
-                -z_deviation
+            cell_center
+            + Vec3(-x_deviation + offset.x, y_deviation + offset.y, -z_deviation),
+            cell_center
+            + Vec3(
+                -x_deviation + offset.x, y_deviation + offset.y, z_deviation + offset.z
             ),
-            cell_center + Vec3(
-                -x_deviation + offset.x,
-                y_deviation + offset.y,
-                z_deviation + offset.z
-            ),
-            self._materials['stairs'],
+            self._materials["stairs"],
             _south,
         )
 
@@ -252,26 +231,23 @@ class StairMedRoof(StairFlatRoof):
 @final
 class RoofFactory:
     """Roof Factory. Does not retain ownership over produced instances."""
+
     __roof_types = {
         RoofType.DEFAULT: DefaultRoof,
         RoofType.FLAT: FlatRoof,
         RoofType.ANGLED_FLAT: AngledFlatRoof,
         RoofType.STAIR_FLAT: StairFlatRoof,
-        RoofType.STAIR_MEDIUM: StairMedRoof
+        RoofType.STAIR_MEDIUM: StairMedRoof,
     }
 
     @classmethod
     def create(
-            cls,
-            cell_center: Vec3,
-            /,
-            materials: MaterialPack,
-            roof_type: RoofType,
-            *,
-            cell_dim: Vec3 = Vec3(4, 4, 4)
+        cls,
+        cell_center: Vec3,
+        /,
+        materials: MaterialPack,
+        roof_type: RoofType,
+        *,
+        cell_dim: Vec3 = Vec3(4, 4, 4),
     ) -> Roof:
-        return cls.__roof_types[roof_type](
-            cell_center,
-            materials,
-            cell_dim=cell_dim
-        )
+        return cls.__roof_types[roof_type](cell_center, materials, cell_dim=cell_dim)

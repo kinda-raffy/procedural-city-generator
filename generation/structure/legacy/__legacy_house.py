@@ -295,9 +295,9 @@ class House:
                             self.generated_rooms[start_room_name][
                                 1
                             ].room_type = "downstairs_stairs"
-                            self.generated_rooms[start_room_name][
-                                1
-                            ].room_director(stair_type=self.stair_type)
+                            self.generated_rooms[start_room_name][1].room_director(
+                                stair_type=self.stair_type
+                            )
                             # furnishing for upstairs
                             for i in range(6, 9):
                                 self.create_furnish(gr_list=upstairs, index=i)
@@ -315,9 +315,9 @@ class House:
                             self.generated_rooms[start_room_name][
                                 1
                             ].room_type = "upstairs_stairs"
-                            self.generated_rooms[start_room_name][
-                                1
-                            ].room_director(stair_type=self.stair_type)
+                            self.generated_rooms[start_room_name][1].room_director(
+                                stair_type=self.stair_type
+                            )
                             # furnishing for the third level
                             for i in range(6, 9):
                                 self.create_furnish(gr_list=third_level, index=i)
@@ -564,7 +564,9 @@ class House:
                 sleep(sleep_time / 2)
                 mc.setBlock(start.__x + 1, end.__y, start.z + 2, matt_fur["ceil_right"])
                 sleep(sleep_time / 2)
-                mc.setBlock(start.__x, start.__y + 2, start.z + 1, matt_fur["ceil_back"])
+                mc.setBlock(
+                    start.__x, start.__y + 2, start.z + 1, matt_fur["ceil_back"]
+                )
                 sleep(sleep_time / 2)
 
             elif "2" in key:
@@ -642,7 +644,9 @@ class House:
                     matt_fur["ceil_right"],
                 )
                 sleep(sleep_time / 2)
-                mc.setBlock(start.__x, start.__y + 2, start.z + 1, matt_fur["ceil_back"])
+                mc.setBlock(
+                    start.__x, start.__y + 2, start.z + 1, matt_fur["ceil_back"]
+                )
                 sleep(sleep_time / 2)
                 # bottom centers
                 # mc.setBlock(end.x, end.y - 2, end.z - 1, matt_fur['floor_front'])
@@ -1104,47 +1108,65 @@ class House:
         upstairs_grid_cdr = {
             "top_left": [
                 Vec3(
-                    self.center.__x + 2, self.center.__y + level_y_start, self.center.z - 6
+                    self.center.__x + 2,
+                    self.center.__y + level_y_start,
+                    self.center.z - 6,
                 )
             ],
             "top_center": [
                 Vec3(
-                    self.center.__x + 2, self.center.__y + level_y_start, self.center.z - 2
+                    self.center.__x + 2,
+                    self.center.__y + level_y_start,
+                    self.center.z - 2,
                 )
             ],
             "top_right": [
                 Vec3(
-                    self.center.__x + 2, self.center.__y + level_y_start, self.center.z + 2
+                    self.center.__x + 2,
+                    self.center.__y + level_y_start,
+                    self.center.z + 2,
                 )
             ],
             "center_left": [
                 Vec3(
-                    self.center.__x - 2, self.center.__y + level_y_start, self.center.z - 6
+                    self.center.__x - 2,
+                    self.center.__y + level_y_start,
+                    self.center.z - 6,
                 )
             ],
             "true_center": [
                 Vec3(
-                    self.center.__x - 2, self.center.__y + level_y_start, self.center.z - 2
+                    self.center.__x - 2,
+                    self.center.__y + level_y_start,
+                    self.center.z - 2,
                 )
             ],
             "center_right": [
                 Vec3(
-                    self.center.__x - 2, self.center.__y + level_y_start, self.center.z + 2
+                    self.center.__x - 2,
+                    self.center.__y + level_y_start,
+                    self.center.z + 2,
                 )
             ],
             "bottom_left": [
                 Vec3(
-                    self.center.__x - 6, self.center.__y + level_y_start, self.center.z - 6
+                    self.center.__x - 6,
+                    self.center.__y + level_y_start,
+                    self.center.z - 6,
                 )
             ],
             "bottom_center": [
                 Vec3(
-                    self.center.__x - 6, self.center.__y + level_y_start, self.center.z - 2
+                    self.center.__x - 6,
+                    self.center.__y + level_y_start,
+                    self.center.z - 2,
                 )
             ],
             "bottom_right": [
                 Vec3(
-                    self.center.__x - 6, self.center.__y + level_y_start, self.center.z + 2
+                    self.center.__x - 6,
+                    self.center.__y + level_y_start,
+                    self.center.z + 2,
                 )
             ],
         }
@@ -1635,7 +1657,10 @@ class Room:
                     self.mat_pack["slab"],
                 )
                 mc.setBlock(
-                    self.pos.__x + 2, self.pos.__y, self.pos.z + 2, self.mat_pack["slab"]
+                    self.pos.__x + 2,
+                    self.pos.__y,
+                    self.pos.z + 2,
+                    self.mat_pack["slab"],
                 )
                 mc.setBlock(
                     self.pos.__x + 3,
@@ -1720,7 +1745,10 @@ class Room:
                 0,
             )
             mc.setBlock(
-                self.pos.__x + 3, self.pos.__y + 1, self.pos.z + 2, self.mat_pack["pillars"]
+                self.pos.__x + 3,
+                self.pos.__y + 1,
+                self.pos.z + 2,
+                self.mat_pack["pillars"],
             )
             mc.setBlock(
                 self.pos.__x + 3,
@@ -1774,22 +1802,40 @@ class Room:
                 self.mat_pack["walls"],
             )
             mc.setBlock(
-                self.pos.__x + 2, self.pos.__y + 1, self.pos.z + 2, self.mat_pack["slab"]
+                self.pos.__x + 2,
+                self.pos.__y + 1,
+                self.pos.z + 2,
+                self.mat_pack["slab"],
             )
             mc.setBlock(
-                self.pos.__x + 3, self.pos.__y + 1, self.pos.z + 2, self.mat_pack["pillars"]
+                self.pos.__x + 3,
+                self.pos.__y + 1,
+                self.pos.z + 2,
+                self.mat_pack["pillars"],
             )
             mc.setBlock(
-                self.pos.__x + 3, self.pos.__y + 2, self.pos.z + 1, self.mat_pack["slab"]
+                self.pos.__x + 3,
+                self.pos.__y + 2,
+                self.pos.z + 1,
+                self.mat_pack["slab"],
             )
             mc.setBlock(
-                self.pos.__x + 3, self.pos.__y + 2, self.pos.z + 3, self.mat_pack["slab"]
+                self.pos.__x + 3,
+                self.pos.__y + 2,
+                self.pos.z + 3,
+                self.mat_pack["slab"],
             )
             mc.setBlock(
-                self.pos.__x + 2, self.pos.__y + 3, self.pos.z + 1, self.mat_pack["slab"]
+                self.pos.__x + 2,
+                self.pos.__y + 3,
+                self.pos.z + 1,
+                self.mat_pack["slab"],
             )
             mc.setBlock(
-                self.pos.__x + 2, self.pos.__y + 3, self.pos.z + 3, self.mat_pack["slab"]
+                self.pos.__x + 2,
+                self.pos.__y + 3,
+                self.pos.z + 3,
+                self.mat_pack["slab"],
             )
             sleep(sleep_time / 5)
 
@@ -2052,7 +2098,11 @@ class Room:
 
         # add gates
         mc.setBlock(
-            self.pos.__x, self.pos.__y + 1, self.pos.z + 2, self.mat_pack["fence_gate"], 1
+            self.pos.__x,
+            self.pos.__y + 1,
+            self.pos.z + 2,
+            self.mat_pack["fence_gate"],
+            1,
         )
         mc.setBlock(
             self.pos.__x + 4,
@@ -2069,7 +2119,11 @@ class Room:
             2,
         )
         mc.setBlock(
-            self.pos.__x + 2, self.pos.__y + 1, self.pos.z, self.mat_pack["fence_gate"], 2
+            self.pos.__x + 2,
+            self.pos.__y + 1,
+            self.pos.z,
+            self.mat_pack["fence_gate"],
+            2,
         )
         sleep(sleep_time / 5)
 
@@ -2751,7 +2805,9 @@ class Room:
                 door_type="single",
             )
         elif wall_type["ceil_bar"] == internal_wall_dice:
-            mc.setBlocks(start_cdr, end_cdr.__x, end_cdr.__y - 1, end_cdr.z, block.AIR.id)
+            mc.setBlocks(
+                start_cdr, end_cdr.__x, end_cdr.__y - 1, end_cdr.z, block.AIR.id
+            )
             ceil_bar_start = start_cdr + Vec3(0, 3, 0)
             mc.setBlocks(
                 ceil_bar_start.__x,

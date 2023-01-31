@@ -32,6 +32,8 @@ class VillageGridUnit:
         # Use vector field to derive terrain.
         self._terrain_type = VillageGridUnit.derive_vector_terrain(self.vector_position)
 
+    # TODO: Equality function for searching without iteration?
+
     @staticmethod
     def derive_vector_terrain(block_position: Vec3) -> TerrainType:
         block_id = server_connection.getBlock(
@@ -45,10 +47,22 @@ class VillageGridUnit:
                 and block_id in terrain_type_block_ids
             ):
                 return terrain_type
-        # Return ground if no matches identified for another type.
         return TerrainType.GROUND
 
-    # TODO: Clean up these functions below using decorators? Need to consolidate shared code.
+    @staticmethod
+    def adjacent_unit_positions() -> typing.Iterable[
+        typing.Callable[[VillageGridUnit, int], VillageGridUnit]
+    ]:
+        # NOTE: Facilitates iteration over units on all cardinal boundaries of any pre-existing unit.
+        for adjacent_unit_creation_function in [
+            VillageGridUnit.create_unit_north,
+            VillageGridUnit.create_unit_east,
+            VillageGridUnit.create_unit_south,
+            VillageGridUnit.create_unit_west,
+        ]:
+            yield adjacent_unit_creation_function
+
+    # TODO: Consolidate these functions using decorators or functools?
 
     @staticmethod
     def create_unit_north(

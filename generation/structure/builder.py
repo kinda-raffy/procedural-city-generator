@@ -71,18 +71,18 @@ from generation.biome import Biome
 from generation.structure.errors.structure import BuilderNotImplemented
 
 
-
 __all__ = [
-    'GlobalComponentsPreference',
-    'GlobalComponents',
-    'Builder',
-    'ResidentialBuilder',
-    'HouseBuilder',
-    'ApartmentBuilder',
-    'SkyscraperBuilder',
+    "GlobalComponentsPreference",
+    "GlobalComponents",
+    "Builder",
+    "ResidentialBuilder",
+    "HouseBuilder",
+    "ApartmentBuilder",
+    "SkyscraperBuilder",
 ]
 
-logger = logging.getLogger('structure')
+logger = logging.getLogger("structure")
+
 
 class GlobalComponentsPreference(TypedDict):
     """
@@ -95,6 +95,7 @@ class GlobalComponentsPreference(TypedDict):
     Concrete methods may override global
     preferences to generate unique types per cell.
     """
+
     StairType: Optional[Tuple[StairType, ...]]
     RoofType: Optional[Tuple[RoofType, ...]]
     WindowType: Optional[Tuple[WindowType, ...]]
@@ -106,6 +107,7 @@ class GlobalComponents(TypedDict):
     Chosen global components
     that will be used during building.
     """
+
     StairType: StairType
     RoofType: RoofType
     WindowType: WindowType
@@ -116,22 +118,15 @@ class Builder(metaclass=ABCMeta):
     # TODO ~ Add Documentation.
     # TODO ~ Add custom cell dimension support to builder methods.
     def __init__(
-            self,
-            biome: Biome,
-            /, *,
-            build_dimensions: Vec3,
-            entry: Vec3,
-            center: Vec3
+        self, biome: Biome, /, *, build_dimensions: Vec3, entry: Vec3, center: Vec3
     ):
-        self._biome: Final[Biome] = biome,
+        self._biome: Final[Biome] = (biome,)
         self._size: Final = build_dimensions
         self._entrance: Final = entry
         self._structure_center: Final = center
         self._blueprint: Optional[Blueprint] = None
         self._materials: Optional[MaterialPack] = None
-        self._global_component_spec: Optional[
-            GlobalComponents
-        ] = None
+        self._global_component_spec: Optional[GlobalComponents] = None
 
     @abstractmethod
     def _generate_blueprint(self) -> Blueprint:
@@ -160,17 +155,18 @@ class Builder(metaclass=ABCMeta):
         for component, value in spec.items():
             if value is None:
                 loaded_component: Enum = eval(component)
-                component_types: List[str] = \
-                    loaded_component.__dict__['_member_names_']
-                assert len(component_types) > 0, \
-                    f'No component types found for {component}'
+                component_types: List[str] = loaded_component.__dict__["_member_names_"]
+                assert (
+                    len(component_types) > 0
+                ), f"No component types found for {component}"
                 selected_type: str = random.choice(component_types)
                 spec[component] = loaded_component[selected_type]
             else:
                 spec[component] = random.choice(value)
-        assert all([type_ is not None for type_ in spec.values()]), \
-            'Component specification is invalid.'
-        logger.debug(f'Global component specification: {spec}')
+        assert all(
+            [type_ is not None for type_ in spec.values()]
+        ), "Component specification is invalid."
+        logger.debug(f"Global component specification: {spec}")
         return spec
 
     def __enter__(self) -> Self:
@@ -178,15 +174,12 @@ class Builder(metaclass=ABCMeta):
         Perform required initialization before
         building and logging.
         """
-        logger.info(f'Building structure of type {self.__class__.__name__}')
+        logger.info(f"Building structure of type {self.__class__.__name__}")
         self._global_component_spec = self._evaluate_components(
             self.global_component_preference()
         )
         self._blueprint = self._generate_blueprint()
-        env = Environment(
-            biome=self._biome,
-            builder=type(self)
-        )
+        env = Environment(biome=self._biome, builder=type(self))
         env.clear_block(self._size, ground=self._entrance.y)
         self._materials = env.get_material_pack()
         return self
@@ -198,15 +191,15 @@ class Builder(metaclass=ABCMeta):
         """
         if exc_type is not None:
             # If error occurs while building, reset the build area.
-            logger.error(f'Error occurred while building: {exc_val}')
+            logger.error(f"Error occurred while building: {exc_val}")
             logger.exception(exc_tb)
             Environment.clear_block(self._size, ground=self._entrance.y)
             return False  # Let the exception propagate.
         self._add_external_obj()
-        logger.info(f'Finished building structure {self}.')
+        logger.info(f"Finished building structure {self}.")
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__} at {self._structure_center}>'
+        return f"<{self.__class__.__name__} at {self._structure_center}>"
 
     @final
     def __len__(self) -> int:
@@ -224,27 +217,42 @@ class Builder(metaclass=ABCMeta):
 
 class ResidentialBuilder(Builder, metaclass=ABCMeta):
     @abstractmethod
-    def create_structure(self) -> NoReturn: ...
+    def create_structure(self) -> NoReturn:
+        ...
+
     @abstractmethod
-    def create_stairs(self) -> NoReturn: ...
+    def create_stairs(self) -> NoReturn:
+        ...
+
     @abstractmethod
-    def create_doors(self) -> NoReturn: ...
+    def create_doors(self) -> NoReturn:
+        ...
+
     @abstractmethod
-    def create_roof(self) -> NoReturn: ...
+    def create_roof(self) -> NoReturn:
+        ...
+
     @abstractmethod
-    def create_pool(self) -> NoReturn: ...
+    def create_pool(self) -> NoReturn:
+        ...
+
     @abstractmethod
-    def create_windows(self) -> NoReturn: ...
+    def create_windows(self) -> NoReturn:
+        ...
 
 
 @final
 class HouseBuilder(ResidentialBuilder):
     def global_component_preference(self) -> GlobalComponentsPreference:
         return {
-            'StairType': None,
-            'RoofType': None,
-            'WindowType': (WindowType.DOUBLE_BAR, WindowType.HORIZONTAL_STRIP, WindowType.FULL),
-            'PoolStructureType': None,
+            "StairType": None,
+            "RoofType": None,
+            "WindowType": (
+                WindowType.DOUBLE_BAR,
+                WindowType.HORIZONTAL_STRIP,
+                WindowType.FULL,
+            ),
+            "PoolStructureType": None,
         }
 
     def _generate_blueprint(self) -> Blueprint:
@@ -253,18 +261,15 @@ class HouseBuilder(ResidentialBuilder):
             self._size,
             entrance=self._entrance,
             center=self._structure_center,
-            explore_factor=0.5
+            explore_factor=0.5,
         )
         blueprint.run_engine()
         return blueprint
 
     def create_structure(self) -> NoReturn:
-        logger.debug('Creating structural frame.')
+        logger.debug("Creating structural frame.")
         for cell in self._blueprint:
-            frame: Frame = DefaultFrame(
-                cell,
-                self._materials
-            )
+            frame: Frame = DefaultFrame(cell, self._materials)
             frame.set_cell_frame()
             frame.perform_cell_merge()
             frame.set_cell_floor()
@@ -273,11 +278,11 @@ class HouseBuilder(ResidentialBuilder):
 
     def create_stairs(self) -> NoReturn:
         # Uses global stairs.
-        stair_type: StairType = self._global_component_spec['StairType']
-        logger.debug(f'Placing stairs of type {stair_type}.')
+        stair_type: StairType = self._global_component_spec["StairType"]
+        logger.debug(f"Placing stairs of type {stair_type}.")
         for cell in self._blueprint.breadth_traversal(
-                self._blueprint[self._entrance],
-                _predicate=lambda k, c: c.type_ == CellType.LEVEL_ENTRY
+            self._blueprint[self._entrance],
+            _predicate=lambda k, c: c.type_ == CellType.LEVEL_ENTRY,
         ):
             stair: Stair = StairFactory().create(
                 cell.pos,
@@ -289,21 +294,18 @@ class HouseBuilder(ResidentialBuilder):
             stair.set_above_stairs()
 
     def create_doors(self) -> NoReturn:
-        logger.debug('Placing doors.')
+        logger.debug("Placing doors.")
         for cell in self._blueprint:
-            door: Door = DoorFactory().create(
-                cell.pos,
-                self._materials
-            )
+            door: Door = DoorFactory().create(cell.pos, self._materials)
             door.place_single_door()
 
     def create_roof(self) -> NoReturn:
         # Uses global roof.
-        roof_type: RoofType = self._global_component_spec['RoofType']
-        logger.debug(f'Placing roof of type {roof_type}.')
+        roof_type: RoofType = self._global_component_spec["RoofType"]
+        logger.debug(f"Placing roof of type {roof_type}.")
         for cell in self._blueprint.breadth_traversal(
-                self._blueprint[self._entrance],
-                _predicate=lambda k, c: c.type_ != CellType.POOL
+            self._blueprint[self._entrance],
+            _predicate=lambda k, c: c.type_ != CellType.POOL,
         ):
             roof: Roof = RoofFactory().create(
                 cell.pos,
@@ -315,13 +317,14 @@ class HouseBuilder(ResidentialBuilder):
 
     def create_pool(self) -> NoReturn:
         # Uses global pool structure and roof.
-        pool_struct_type: PoolStructureType = \
-            self._global_component_spec['PoolStructureType']
-        logger.debug(f'Placing pool of type {pool_struct_type}.')
-        roof_type: RoofType = self._global_component_spec['RoofType']
+        pool_struct_type: PoolStructureType = self._global_component_spec[
+            "PoolStructureType"
+        ]
+        logger.debug(f"Placing pool of type {pool_struct_type}.")
+        roof_type: RoofType = self._global_component_spec["RoofType"]
         for cell in self._blueprint.breadth_traversal(
-                self._blueprint[self._entrance],
-                _predicate=lambda k, c: c.type_ == CellType.POOL
+            self._blueprint[self._entrance],
+            _predicate=lambda k, c: c.type_ == CellType.POOL,
         ):
             pool: Pool = CellPool(
                 cell.pos,
@@ -345,13 +348,14 @@ class HouseBuilder(ResidentialBuilder):
         window_type: WindowType = random.choice(
             [WindowType.DOUBLE_BAR, WindowType.HORIZONTAL_STRIP, WindowType.FULL]
         )
-        logger.debug(f'Placing windows of type {window_type}.')
+        logger.debug(f"Placing windows of type {window_type}.")
         for cell in self._blueprint.breadth_traversal(
-                self._blueprint[self._entrance],
-                _predicate=lambda k, c: c.faces_environment()
+            self._blueprint[self._entrance],
+            _predicate=lambda k, c: c.faces_environment(),
         ):
-            outside_faces: Tuple[CellDirection, ...] = \
-                cell.faces_environment_direction()
+            outside_faces: Tuple[
+                CellDirection, ...
+            ] = cell.faces_environment_direction()
             for face in outside_faces:
                 window: Window = WindowFactory().create(
                     cell.pos,
@@ -362,7 +366,7 @@ class HouseBuilder(ResidentialBuilder):
                 window.place()
 
     def _add_external_obj(self) -> NoReturn:
-        logger.debug('Adding external objects.')
+        logger.debug("Adding external objects.")
         self._add_family()
         self._add_flowers()
 
@@ -381,10 +385,10 @@ class ApartmentBuilder(ResidentialBuilder):
 
     def global_component_preference(self) -> GlobalComponentsPreference:
         return {
-            'StairType': None,
-            'RoofType': (RoofType.FLAT, RoofType.ANGLED_FLAT),
-            'WindowType': (WindowType.DOUBLE_BAR, WindowType.FULL),
-            'PoolStructureType': None,
+            "StairType": None,
+            "RoofType": (RoofType.FLAT, RoofType.ANGLED_FLAT),
+            "WindowType": (WindowType.DOUBLE_BAR, WindowType.FULL),
+            "PoolStructureType": None,
         }
 
     def _generate_blueprint(self) -> Blueprint:
@@ -397,13 +401,26 @@ class ApartmentBuilder(ResidentialBuilder):
         blueprint.run_engine()
         return blueprint
 
-    def create_structure(self) -> NoReturn: ...
-    def create_stairs(self) -> NoReturn: ...
-    def create_doors(self) -> NoReturn: ...
-    def create_roof(self) -> NoReturn: ...
-    def create_pool(self) -> NoReturn: ...
-    def create_windows(self) -> NoReturn: ...
-    def _add_external_obj(self) -> NoReturn: ...
+    def create_structure(self) -> NoReturn:
+        ...
+
+    def create_stairs(self) -> NoReturn:
+        ...
+
+    def create_doors(self) -> NoReturn:
+        ...
+
+    def create_roof(self) -> NoReturn:
+        ...
+
+    def create_pool(self) -> NoReturn:
+        ...
+
+    def create_windows(self) -> NoReturn:
+        ...
+
+    def _add_external_obj(self) -> NoReturn:
+        ...
 
 
 @final
@@ -414,10 +431,10 @@ class SkyscraperBuilder(ResidentialBuilder):
 
     def global_component_preference(self) -> GlobalComponentsPreference:
         return {
-            'StairType': (StairType.DOUBLE, StairType.DOUBLE_SLAB),
-            'RoofType': tuple(RoofType.FLAT),
-            'WindowType': tuple(WindowType.FULL),
-            'PoolStructureType': None,
+            "StairType": (StairType.DOUBLE, StairType.DOUBLE_SLAB),
+            "RoofType": tuple(RoofType.FLAT),
+            "WindowType": tuple(WindowType.FULL),
+            "PoolStructureType": None,
         }
 
     def _generate_blueprint(self) -> Blueprint:
@@ -430,10 +447,23 @@ class SkyscraperBuilder(ResidentialBuilder):
         blueprint.run_engine()
         return blueprint
 
-    def create_structure(self) -> NoReturn: ...
-    def create_stairs(self) -> NoReturn: ...
-    def create_doors(self) -> NoReturn: ...
-    def create_roof(self) -> NoReturn: ...
-    def create_pool(self) -> NoReturn: ...
-    def create_windows(self) -> NoReturn: ...
-    def _add_external_obj(self) -> NoReturn: ...
+    def create_structure(self) -> NoReturn:
+        ...
+
+    def create_stairs(self) -> NoReturn:
+        ...
+
+    def create_doors(self) -> NoReturn:
+        ...
+
+    def create_roof(self) -> NoReturn:
+        ...
+
+    def create_pool(self) -> NoReturn:
+        ...
+
+    def create_windows(self) -> NoReturn:
+        ...
+
+    def _add_external_obj(self) -> NoReturn:
+        ...
