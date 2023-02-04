@@ -4,8 +4,8 @@ from village_grid_unit import VillageGridUnit, TerrainType
 from mcpi.vec3 import Vec3
 import typing
 
+
 # TODO: Figure out if caching aids performance.
-# import functools
 
 
 class VillageGridFoundation:  # TODO: Test function to display edges between connected units?
